@@ -22,7 +22,7 @@ export default function LoginPage() {
         
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-3 font-black text-3xl tracking-tighter text-white">
-            <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
               <ShoppingBag className="w-6 h-6 text-slate-900" />
             </div>
             AF Mall
@@ -30,7 +30,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10">
-          <h1 className="text-5xl font-black text-white leading-tight mb-6 tracking-tight">Manage the <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Extraordinary</span></h1>
+          <h1 className="text-5xl font-black text-white leading-tight mb-6 tracking-tight">Manage the <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Extraordinary</span></h1>
           <p className="text-lg text-slate-300 max-w-md">Access the centralized administration portal to manage stores, categories, and events for AF Mall.</p>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default function LoginPage() {
           <div className="text-center lg:text-left mb-10">
             <div className="lg:hidden flex justify-center mb-8">
               <Link href="/" className="inline-flex items-center gap-3 font-black text-3xl tracking-tighter text-slate-900">
-                <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
                   <ShoppingBag className="w-6 h-6 text-white" />
                 </div>
                 AF Mall
@@ -56,12 +56,12 @@ export default function LoginPage() {
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email address</label>
                 <div className="relative group">
-                  <Mail className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-amber-500 transition-colors" />
+                  <Mail className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-red-600 transition-colors" />
                   <input
                     name="email"
                     type="email"
                     required
-                    className="pl-12 w-full rounded-2xl bg-slate-50 border-none px-4 py-4 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all placeholder:font-normal placeholder:text-slate-400"
+                    className="pl-12 w-full rounded-2xl bg-slate-50 border-none px-4 py-4 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-red-600 transition-all placeholder:font-normal placeholder:text-slate-400"
                     placeholder="admin@afmall.az"
                     defaultValue="admin@afmall.az"
                   />
@@ -70,15 +70,15 @@ export default function LoginPage() {
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide flex justify-between">
                   <span>Password</span>
-                  <a href="#" className="text-amber-600 hover:text-amber-500 normal-case tracking-normal text-xs">Forgot?</a>
+                  <a href="#" className="text-red-700 hover:text-red-600 normal-case tracking-normal text-xs">Forgot?</a>
                 </label>
                 <div className="relative group">
-                  <Lock className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-amber-500 transition-colors" />
+                  <Lock className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-red-600 transition-colors" />
                   <input
                     name="password"
                     type="password"
                     required
-                    className="pl-12 w-full rounded-2xl bg-slate-50 border-none px-4 py-4 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all placeholder:font-normal placeholder:text-slate-400"
+                    className="pl-12 w-full rounded-2xl bg-slate-50 border-none px-4 py-4 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-red-600 transition-all placeholder:font-normal placeholder:text-slate-400"
                     placeholder="••••••••"
                     defaultValue="password123"
                   />
@@ -95,7 +95,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl shadow-xl shadow-amber-500/20 text-base font-bold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl shadow-xl shadow-red-600/20 text-base font-bold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isPending ? 'Signing in...' : 'Sign In to Dashboard'}
               {!isPending && <ArrowRight className="w-5 h-5" />}

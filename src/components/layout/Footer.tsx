@@ -3,11 +3,18 @@ import { MapPin, Phone, Mail } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 py-12 mt-auto">
+    <footer className="bg-slate-900 text-slate-400 py-16 mt-auto">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-white font-bold text-xl mb-4">AF Mall</h3>
-          <p className="text-sm text-slate-400 mb-6">
+          <div className="flex items-center gap-2 mb-6 group">
+            <div className="w-8 h-8 bg-red-600 rounded-sm flex items-center justify-center text-white font-black text-lg tracking-wide">
+              AF
+            </div>
+            <span className="font-bold text-xl tracking-wide text-white uppercase">
+              Mall
+            </span>
+          </div>
+          <p className="text-sm text-slate-400 mb-6 leading-relaxed">
             The ultimate premium shopping and entertainment destination in the heart of the city.
           </p>
           <div className="flex items-center gap-4">
@@ -24,7 +31,7 @@ export function Footer() {
           <h4 className="text-white font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm">
             <li><Link href="/stores" className="hover:text-white transition-colors">All Stores</Link></li>
-            <li><Link href="/dining" className="hover:text-white transition-colors">Dining & Food</Link></li>
+            <li><Link href="/stores?category=2" className="hover:text-white transition-colors">Dining & Food</Link></li>
             <li><Link href="/events" className="hover:text-white transition-colors">Events & Offers</Link></li>
             <li><Link href="/map" className="hover:text-white transition-colors">Mall Map</Link></li>
           </ul>
@@ -33,9 +40,9 @@ export function Footer() {
         <div>
           <h4 className="text-white font-semibold mb-4">Information</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="#" className="hover:text-white transition-colors">About Us</Link></li>
-            <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
-            <li><Link href="#" className="hover:text-white transition-colors">Careers</Link></li>
+            <li><Link href="/leasing" className="hover:text-white transition-colors">Leasing Inquiries</Link></li>
+            <li><Link href="/how-to-get" className="hover:text-white transition-colors">How to get here</Link></li>
+            <li><Link href="/vacancies" className="hover:text-white transition-colors">Careers</Link></li>
             <li><Link href="#" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
           </ul>
         </div>
@@ -44,15 +51,15 @@ export function Footer() {
           <h4 className="text-white font-semibold mb-4">Contact Us</h4>
           <ul className="space-y-4 text-sm">
             <li className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 shrink-0 text-blue-500" />
+              <MapPin className="w-5 h-5 shrink-0 text-red-500" />
               <span>123 Shopping Blvd, City Center, Baku, AZ1000</span>
             </li>
             <li className="flex items-center gap-3">
-              <Phone className="w-5 h-5 shrink-0 text-blue-500" />
+              <Phone className="w-5 h-5 shrink-0 text-red-500" />
               <span>+994 12 345 67 89</span>
             </li>
             <li className="flex items-center gap-3">
-              <Mail className="w-5 h-5 shrink-0 text-blue-500" />
+              <Mail className="w-5 h-5 shrink-0 text-red-500" />
               <span>info@afmall.az</span>
             </li>
           </ul>

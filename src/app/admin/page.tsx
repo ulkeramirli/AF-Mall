@@ -1,17 +1,20 @@
-import { Store, Tag, Calendar, Users, TrendingUp } from "lucide-react"
-import { stores, categories, events } from "@/lib/mockData"
+import { Store, Tag, Calendar, Users, TrendingUp, Briefcase, Building } from "lucide-react"
+import { stores, categories, events, vacancies, premises } from "@/lib/mockData"
 
 export default function AdminDashboard() {
   const storeCount = stores.length;
   const categoryCount = categories.length;
   const eventCount = events.length;
-  const userCount = 1;
+  const vacancyCount = vacancies.length;
+  const availablePremises = premises.filter(p => p.status === 'Available').length;
 
   const stats = [
-    { name: "Total Stores", value: storeCount, icon: Store, color: "text-amber-600", bg: "bg-amber-100" },
-    { name: "Categories", value: categoryCount, icon: Tag, color: "text-blue-600", bg: "bg-blue-100" },
+    { name: "Total Stores", value: storeCount, icon: Store, color: "text-red-700", bg: "bg-red-100" },
+    { name: "Categories", value: categoryCount, icon: Tag, color: "text-red-600", bg: "bg-red-100" },
+    { name: "Available Premises", value: availablePremises, icon: Building, color: "text-blue-600", bg: "bg-blue-100" },
+    { name: "Active Vacancies", value: vacancyCount, icon: Briefcase, color: "text-amber-600", bg: "bg-amber-100" },
     { name: "Active Events", value: eventCount, icon: Calendar, color: "text-emerald-600", bg: "bg-emerald-100" },
-    { name: "Administrators", value: userCount, icon: Users, color: "text-purple-600", bg: "bg-purple-100" },
+    { name: "Administrators", value: 1, icon: Users, color: "text-purple-600", bg: "bg-purple-100" },
   ]
 
   return (
@@ -42,8 +45,8 @@ export default function AdminDashboard() {
           <h3 className="text-2xl font-black text-slate-900 mb-6">Recent Activity</h3>
           <div className="space-y-6">
              <div className="flex items-start gap-4">
-               <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0 mt-1">
-                  <Store className="w-5 h-5 text-amber-600" />
+               <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-1">
+                  <Store className="w-5 h-5 text-red-700" />
                </div>
                <div>
                   <p className="text-slate-900 font-bold">New store "Zara" added</p>
@@ -51,8 +54,8 @@ export default function AdminDashboard() {
                </div>
              </div>
              <div className="flex items-start gap-4">
-               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-1">
-                  <Calendar className="w-5 h-5 text-blue-600" />
+               <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-1">
+                  <Calendar className="w-5 h-5 text-red-600" />
                </div>
                <div>
                   <p className="text-slate-900 font-bold">"Summer Fashion Show" event updated</p>

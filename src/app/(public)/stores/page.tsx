@@ -1,16 +1,21 @@
+'use client'
+
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Search, ChevronRight, Star, ArrowUpRight } from 'lucide-react'
+import { MapPin, Search, ChevronRight, ArrowRight } from 'lucide-react'
 import { stores as allStores, categories } from '@/lib/mockData'
+import { useLanguage } from '@/context/LanguageContext'
+import { useTranslation } from '@/lib/i18n'
+import { Suspense } from 'react'
 
-type Props = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
+function StoresContent() {
+  const searchParams = useSearchParams()
+  const categoryId = searchParams.get('category')
+  const q = searchParams.get('q')
 
-export default async function StoresPage({ searchParams }: Props) {
-  const params = await searchParams
-  const categoryId = typeof params.category === 'string' ? params.category : undefined
-  const q = typeof params.q === 'string' ? params.q : undefined
+  const { lang } = useLanguage()
+  const t = useTranslation(lang)
 
   let filteredStores = allStores;
 
@@ -27,170 +32,197 @@ export default async function StoresPage({ searchParams }: Props) {
     category: categories.find(c => c.id === store.categoryId)
   }));
 
-  const activeCategory = categoryId ? categories.find(c => c.id === categoryId)?.name : 'All Brands';
+  const activeCategory = categoryId ? (t.categories as Record<string, string>)[categoryId] : t.stores.directory;
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-32 font-sans">
-      
-      {/* Cinematic Header */}
-      <div className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden bg-slate-900">
+    <div className="bg-[#fafafa] min-h-screen pb-32 font-sans selection:bg-black selection:text-white">
+      {/* Hero Section */}
+      <section className="relative h-[45vh] min-h-100 flex items-center justify-center overflow-hidden bg-black">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=2000&q=80" 
-            alt="Fashion and Shopping" 
+            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=2400&q=85" 
+            alt="Mall Directory" 
             fill
-            className="object-cover opacity-50"
+            className="object-cover opacity-40 scale-105 animate-[pulse_20s_ease-in-out_infinite]"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#fafafa] via-black/20 to-black/60" />
         </div>
         
-        <div className="relative z-10 text-center px-4">
-          <div className="flex items-center justify-center gap-2 text-sm text-slate-300 mb-4 tracking-widest uppercase font-semibold">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white">Discover</span>
+        <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto mt-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-md text-xs text-white/80 uppercase tracking-widest font-medium mb-6">
+            <Link href="/" className="hover:text-white transition-colors">{t.nav.home}</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-white">{t.stores.brands}</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 drop-shadow-xl">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light text-white mb-6 tracking-tight drop-shadow-sm">
             {activeCategory}
           </h1>
-          <p className="text-lg text-slate-200 max-w-2xl mx-auto">
-            Explore world-class boutiques, immersive dining experiences, and premium entertainment.
+          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
+            {t.stores.heroDesc}
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Sticky Filter Bar */}
-      <div className="sticky top-[80px] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm py-4">
-        <div className="container mx-auto px-4 max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
-          
-          {/* Search */}
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search for a brand..." 
-              className="w-full pl-12 pr-4 py-3 bg-slate-100/50 border border-slate-200 rounded-full text-sm outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-all shadow-inner"
-              defaultValue={q}
-            />
-          </div>
+      {/* Navigation & Filters */}
+      <div className="sticky top-[64px] md:top-[80px] z-30 bg-white/90 backdrop-blur-2xl border-b border-black/5 shadow-sm transition-all">
+        <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+          <div className="flex flex-col md:flex-row items-center justify-between py-3 md:py-4 gap-3 md:gap-4">
+            
+            {/* Search Form */}
+            <form action="/stores" method="GET" className="relative w-full md:w-80 group">
+              {categoryId && <input type="hidden" name="category" value={categoryId} />}
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-black transition-colors" />
+              <input 
+                type="text" 
+                name="q"
+                placeholder={t.stores.searchBrands}
+                className="w-full pl-10 pr-4 py-2 md:py-2.5 bg-gray-100/50 border border-gray-200 rounded-full text-sm outline-none focus:border-black focus:ring-1 focus:ring-black transition-all placeholder:text-gray-400"
+                defaultValue={q || ''}
+              />
+            </form>
 
-          {/* Categories Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
-            <Link 
-              href="/stores"
-              className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-                !categoryId 
-                  ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' 
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+            {/* Categories */}
+            <div 
+              className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              All
-            </Link>
-            {categories.map(c => (
               <Link 
-                key={c.id}
-                href={`/stores?category=${c.id}`}
-                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  categoryId === c.id 
-                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/30' 
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                href="/stores"
+                className={`whitespace-nowrap px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all ${
+                  !categoryId 
+                    ? 'bg-black text-white shadow-md' 
+                    : 'bg-transparent text-gray-500 hover:text-black hover:bg-gray-100'
                 }`}
               >
-                {c.name}
+                {t.stores.allBrands}
               </Link>
-            ))}
+              {categories.map(c => (
+                <Link 
+                  key={c.id}
+                  href={`/stores?category=${c.id}`}
+                  className={`whitespace-nowrap px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all ${
+                    categoryId === c.id 
+                      ? 'bg-black text-white shadow-md' 
+                      : 'bg-transparent text-gray-500 hover:text-black hover:bg-gray-100'
+                  }`}
+                >
+                  {(t.categories as Record<string, string>)[c.id] || c.name}
+                </Link>
+              ))}
+            </div>
+            
           </div>
-          
         </div>
       </div>
 
-      {/* Store Grid */}
-      <div className="container mx-auto px-4 max-w-7xl mt-16">
+      {/* Main Grid */}
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl mt-12 md:mt-20">
         
-        {/* Results Info */}
-        <div className="flex justify-between items-end mb-8">
-          <p className="text-slate-500 font-medium">Showing <span className="text-slate-900 font-bold">{storesWithCategories.length}</span> brands</p>
+        <div className="flex justify-between items-end mb-10 border-b border-black/10 pb-4">
+          <h2 className="text-2xl font-light text-black">
+            {q ? `${t.stores.resultsFor} "${q}"` : t.stores.discover}
+          </h2>
+          <p className="text-sm text-gray-500 font-medium tracking-wide uppercase">
+            <span className="text-black font-bold">{storesWithCategories.length}</span> {t.stores.brandsCount}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {storesWithCategories.map((store, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {storesWithCategories.map((store) => (
             <Link 
               href={`/stores/${store.id}`} 
               key={store.id} 
-              className="group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 flex flex-col h-[400px]"
+              className="group flex flex-col"
             >
-              {/* Image Header */}
-              <div className="relative h-2/3 bg-slate-100 overflow-hidden">
+              {/* Image Container */}
+              <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-gray-100 mb-6 shadow-sm">
                 {store.image ? (
                   <Image 
                     src={store.image} 
                     alt={store.name} 
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-300 font-bold text-6xl">
-                    {store.name[0]}
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                    <span className="text-gray-300 font-light text-6xl">{store.name[0]}</span>
                   </div>
                 )}
-                {/* Elegant overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-60 group-hover:opacity-80 transition-opacity"></div>
                 
-                {/* Floating Tag */}
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-slate-900 shadow-sm">
-                  {store.category?.name}
+                {/* Overlay & Hover Action */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-full opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-sm">
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </div>
 
-                {/* Arrow Icon */}
-                <div className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
-                  <ArrowUpRight className="w-5 h-5" />
+                {/* Category Tag */}
+                <div className="absolute top-4 left-4">
+                  <span className="px-4 py-1.5 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
+                    {(t.categories as Record<string, string>)[store.categoryId] || store.category?.name}
+                  </span>
                 </div>
               </div>
 
-              {/* Content Footer */}
-              <div className="p-6 relative flex flex-col flex-1 bg-white">
-                {/* Logo Overlap */}
-                <div className="absolute -top-12 left-6 w-20 h-20 bg-white rounded-2xl shadow-xl border border-slate-100 flex items-center justify-center overflow-hidden p-2 group-hover:-translate-y-2 transition-transform duration-300">
-                  {store.logo ? (
-                    <Image src={store.logo} alt={`${store.name} logo`} fill className="object-contain p-2" />
-                  ) : (
-                    <span className="text-2xl font-black text-slate-300">{store.name[0]}</span>
-                  )}
+              {/* Content */}
+              <div className="flex items-start justify-between gap-4 px-2">
+                <div>
+                  <h3 className="font-semibold text-2xl text-black mb-2 group-hover:text-gray-600 transition-colors">
+                    {store.name}
+                  </h3>
+                  <div className="flex items-center gap-3 text-sm text-gray-500">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <MapPin className="w-4 h-4" />
+                      {t.stores.level} {store.floor} • {t.stores.zone} {store.location || 'A'}
+                    </span>
+                  </div>
                 </div>
-
-                <div className="mt-8 flex justify-between items-start">
-                  <div>
-                    <h3 className="font-bold text-2xl text-slate-900 mb-2">{store.name}</h3>
-                    <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
-                       <MapPin className="w-4 h-4 text-red-500" />
-                       Level {store.floor}
+                
+                {/* Logo */}
+                {store.logo && (
+                  <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center p-2.5 shrink-0 group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300">
+                    <div className="relative w-full h-full">
+                      <Image 
+                        src={store.logo} 
+                        alt={`${store.name} logo`} 
+                        fill 
+                        className="object-contain" 
+                      />
                     </div>
                   </div>
-                  {/* Rating / Feature Icon */}
-                  <div className="flex items-center gap-1 text-yellow-400 bg-yellow-50 px-2 py-1 rounded-lg">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-xs font-bold text-yellow-700">Premium</span>
-                  </div>
-                </div>
+                )}
               </div>
             </Link>
           ))}
         </div>
 
+        {/* Empty State */}
         {storesWithCategories.length === 0 && (
-          <div className="text-center py-32 bg-white rounded-3xl border border-slate-100 shadow-sm">
-            <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Search className="w-10 h-10 text-slate-300" />
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-24 h-24 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-6">
+              <Search className="w-10 h-10 text-gray-300" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">No brands found</h3>
-            <p className="text-slate-500 mb-8 max-w-md mx-auto">We couldn't find any brands matching your search criteria. Try adjusting your filters.</p>
-            <Link href="/stores" className="inline-flex items-center gap-2 bg-red-600 text-white font-bold px-8 py-3 rounded-full hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20">
-              Clear all filters
+            <h3 className="text-3xl font-light text-black mb-4">{t.stores.noBrandsFound}</h3>
+            <p className="text-gray-500 max-w-md mx-auto mb-10 font-light text-lg">
+              {t.stores.noBrandsDesc}
+            </p>
+            <Link 
+              href="/stores" 
+              className="px-10 py-4 bg-black text-white text-sm font-bold tracking-widest uppercase rounded-full hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
+            >
+              {t.stores.clearFilters}
             </Link>
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+export default function StoresPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fafafa]"></div>}>
+      <StoresContent />
+    </Suspense>
   )
 }

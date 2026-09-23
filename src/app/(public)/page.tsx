@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingBag, MapIcon, Info, Sparkles, Coffee, ArrowRight } from 'lucide-react'
+import { ShoppingBag, MapIcon, Sparkles, Coffee, ArrowRight } from 'lucide-react'
 import { events, stores as allStores, categories } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
+import { useWeather } from '@/hooks/useWeather'
 
 export default function Home() {
   const { lang } = useLanguage()
@@ -13,31 +14,70 @@ export default function Home() {
   const t = translation.home
   const nav = translation.nav
 
+  const { weather } = useWeather()
+
   const recentEvents = events.slice(0, 2)
   const featuredBrands = allStores.slice(0, 6).map(store => ({
     ...store,
     category: categories.find(c => c.id === store.categoryId)
   }))
 
-  const lifestyleBrands = allStores
-    .filter(s => s.categoryId === '4' || s.categoryId === '9')
-    .slice(0, 4)
-    .map(store => ({
-      ...store,
-      category: categories.find(c => c.id === store.categoryId)
-    }))
+  const getGradient = () => {
+    switch (weather) {
+      case 'sunny': return 'from-blue-400 via-blue-200 to-slate-50';
+      case 'rainy': return 'from-slate-600 via-slate-400 to-slate-300';
+      case 'snowy': return 'from-slate-300 via-slate-200 to-slate-100';
+      case 'cloudy':
+      default: return 'from-[#cce0ff] via-[#eaf2ff] to-slate-50';
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans">
       
-      {/* 1. AF MALL HERO - EDITORIAL / MAGAZINE UI */}
-      <section className="relative pt-24 md:pt-32 pb-16 w-full bg-white overflow-hidden min-h-[90vh] flex items-center">
+      {/* 1. AF MALL HERO - IMMERSIVE FULL-SCREEN UI (Deniz Mall Style - Soft Light Theme) */}
+      <section className="relative pt-28 md:pt-32 pb-16 w-full overflow-hidden min-h-[90vh] flex bg-slate-50">
         
-        {/* Subtle Background Elements */}
-        <div className="absolute top-0 right-0 w-[50vw] h-screen bg-slate-50 -z-10 transform skew-x-12 translate-x-32 hidden lg:block"></div>
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-50 rounded-full blur-3xl opacity-50 -z-10"></div>
+        {/* Full-Screen Parallax Clouds Background */}
+        <div className={`absolute inset-0 z-0 overflow-hidden bg-linear-to-b ${getGradient()} transition-colors duration-1000`}>
+          
+          {weather === 'sunny' && (
+            <div className="absolute top-10 right-20 w-48 h-48 bg-yellow-300 rounded-full blur-[60px] opacity-70 pointer-events-none"></div>
+          )}
+
+          {/* Cloud Layer 1 - Far background, slow, large */}
+          <div className={`absolute top-0 left-0 w-[200%] h-[70%] flex animate-[slide_90s_linear_infinite] pointer-events-none transition-opacity duration-1000 ${weather === 'sunny' ? 'opacity-30' : 'opacity-60'}`}>
+            <div className="w-1/2 h-full relative" style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)', maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)' }}>
+              <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center" priority />
+            </div>
+            <div className="w-1/2 h-full relative" style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)', maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)' }}>
+              <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center" priority />
+            </div>
+          </div>
+
+          {/* Cloud Layer 2 - Midground, slightly faster, lowered */}
+          <div className={`absolute top-[30%] left-0 w-[200%] h-[60%] flex animate-[slide_60s_linear_infinite] pointer-events-none transition-opacity duration-1000 ${weather === 'sunny' ? 'opacity-40' : 'opacity-80'}`} style={{ animationDelay: '-30s' }}>
+            <div className="w-1/2 h-full relative" style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)', maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)' }}>
+              <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center" priority />
+            </div>
+            <div className="w-1/2 h-full relative" style={{ WebkitMaskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)', maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 50%, transparent 100%)' }}>
+              <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center" priority />
+            </div>
+          </div>
+
+          {weather === 'rainy' && (
+            <div className="absolute inset-0 pointer-events-none animate-rain opacity-70 z-10"></div>
+          )}
+          {weather === 'snowy' && (
+            <div className="absolute inset-0 pointer-events-none animate-snow opacity-90 z-10"></div>
+          )}
+
+          {/* Soft gradient overlay to make text readable on the left */}
+          <div className="absolute inset-0 bg-linear-to-r from-slate-50/95 via-slate-50/60 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-slate-50 via-transparent to-transparent bottom-0 z-10"></div>
+        </div>
         
-        <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 h-full">
+        <div className="w-[90vw] mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 h-full">
           
           {/* Left Text Content */}
           <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left z-20 pt-10 lg:pt-0">
@@ -47,7 +87,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
               </span>
-              Baku, Azerbaijan
+              {t.bakuAzerbaijan}
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl leading-tight text-slate-900 font-black mb-4 lg:mb-6 tracking-tight">
@@ -71,43 +111,35 @@ export default function Home() {
             </div>
             
             {/* Statistics / Trust Indicators */}
-            <div className="flex items-center gap-6 md:gap-10 mt-10 lg:mt-12 pt-6 border-t border-slate-100 w-full justify-center lg:justify-start">
-               <div>
-                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">100+</p>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Mağaza</p>
+            <div className="flex items-center justify-between lg:justify-start gap-2 sm:gap-6 md:gap-10 mt-10 lg:mt-12 p-5 lg:p-0 lg:pt-6 lg:border-t border-white/50 lg:border-slate-200/60 w-full lg:w-[80%] relative z-30 bg-white/60 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none rounded-3xl lg:rounded-none shadow-xl lg:shadow-none border lg:border-none">
+               <div className="text-center lg:text-left">
+                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter drop-shadow-sm">100+</p>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">{t.store}</p>
                </div>
-               <div className="w-px h-8 bg-slate-200"></div>
-               <div>
-                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">20+</p>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Restoran</p>
+               <div className="w-px h-8 bg-slate-200/50"></div>
+               <div className="text-center lg:text-left">
+                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter drop-shadow-sm">20+</p>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">{t.restaurant}</p>
                </div>
-               <div className="w-px h-8 bg-slate-200"></div>
-               <div>
-                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">Premium</p>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Xidmət</p>
+               <div className="w-px h-8 bg-slate-200/50"></div>
+               <div className="text-center lg:text-left">
+                  <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter drop-shadow-sm">Premium</p>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">{t.premiumService?.split(' ')[1] || 'XİDMƏT'}</p>
                </div>
             </div>
           </div>
           
-          {/* Right Image Container - Editorial Style */}
-          <div className="w-full lg:w-1/2 relative h-[40vh] sm:h-[50vh] lg:h-[65vh] mt-8 lg:mt-0 z-10 flex items-center justify-center px-4 lg:px-0">
-             
-             {/* Decorative Background Elements behind image */}
-             <div className="absolute inset-4 lg:-inset-4 bg-red-600 rounded-[2rem] transform rotate-3 scale-95 opacity-5 transition-transform duration-1000"></div>
-             <div className="absolute inset-4 lg:-inset-4 bg-slate-200 rounded-[2rem] transform -rotate-3 scale-95 opacity-50 transition-transform duration-1000 delay-100"></div>
-             
-             {/* Main Image */}
-             <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-slate-100 group">
+          {/* Right Image Container - Floating Style */}
+          <div className="w-full lg:w-1/2 relative h-50 sm:h-75 lg:h-[80vh] -mt-2 md:-mt-8 lg:mt-0 lg:-ml-12 z-10 flex items-end justify-center lg:justify-end pointer-events-none">
+             {/* Main Building Image (Foreground, floating over clouds) */}
+             <div className="relative w-full h-full lg:w-[130%] lg:h-[110%] lg:-mr-20 scale-[1.45] lg:scale-110 origin-bottom">
                <Image 
-                 src="/hero-af-mall.jpg" 
+                 src="/af-mall.png" 
                  alt="AF Mall Architecture" 
                  fill
-                 className="object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
+                 className="object-contain object-bottom drop-shadow-2xl hover:scale-105 transition-transform duration-2000 ease-out pointer-events-auto"
                  priority
                />
-               
-               {/* Elegant Gradient Overlay at bottom of image for depth */}
-               <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
              </div>
           </div>
 
@@ -160,19 +192,20 @@ export default function Home() {
                 <div className="flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 rounded-xl shadow-sm">
                   <div className="text-left">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">{t.mallHours}</p>
-                    <p className="font-black text-slate-900 text-lg">10:00 - 22:00</p>
+                    <p className="font-black text-slate-900 text-lg">08:00 - 22:00</p>
                   </div>
                 </div>
               </div>
             </div>
             
             {/* Right Images (Bento Grid) */}
-            <div className="lg:w-1/2 w-full grid grid-cols-2 gap-4 h-150">
-              <div className="col-span-1 row-span-2 relative rounded-3xl overflow-hidden group shadow-xl">
+            <div className="lg:w-1/2 w-full grid grid-cols-2 grid-rows-2 gap-3 md:gap-4 h-100 md:h-125 lg:h-150">
+              <div className="col-span-2 md:col-span-1 row-span-1 md:row-span-2 relative rounded-3xl overflow-hidden group shadow-xl">
                 <Image 
-                  src="https://images.unsplash.com/photo-1519567281799-971c26197171?w=800&q=80" 
+                  src="https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=800&q=80" 
                   alt="Shopping Atrium" 
                   fill
+                  style={{ objectFit: 'cover' }}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
@@ -185,15 +218,16 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80" 
                   alt="Dining Experience" 
                   fill
+                  style={{ objectFit: 'cover' }}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                 {/* Removed play button since it's no longer a show */}
               </div>
               <div className="col-span-1 row-span-1 relative rounded-3xl overflow-hidden group shadow-md">
                 <Image 
-                  src="https://images.unsplash.com/photo-1581622558667-3419a8dc5f83?w=800&q=80" 
-                  alt="Mall Architecture" 
+                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" 
+                  alt="Premium Shopping" 
                   fill
+                  style={{ objectFit: 'cover' }}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
@@ -215,12 +249,12 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 max-w-6xl mx-auto">
           {featuredBrands.map((store) => (
             <Link href={`/stores/${store.id}`} key={store.id} className="group relative rounded-2xl overflow-hidden block">
               <div className="aspect-4/5 bg-slate-100 overflow-hidden relative">
                 {store.image ? (
-                  <Image src={store.image} alt={store.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src={store.image} alt={store.name} fill style={{ objectFit: 'cover' }} className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 ) : (
                    <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 font-bold text-4xl">{store.name[0]}</div>
                 )}
@@ -228,51 +262,23 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
               </div>
               
-              <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <div className="bg-white/20 backdrop-blur-md w-16 h-16 rounded-xl flex items-center justify-center mb-4 border border-white/30 shadow-lg overflow-hidden relative">
+              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 transform translate-y-2 md:translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                <div className="bg-white/20 backdrop-blur-md w-10 h-10 md:w-16 md:h-16 rounded-xl flex items-center justify-center mb-2 md:mb-4 border border-white/30 shadow-lg overflow-hidden relative">
                    {store.logo ? (
-                     <Image src={store.logo} alt={`${store.name} logo`} fill className="object-contain filter brightness-0 invert p-2" />
+                     <Image src={store.logo} alt={`${store.name} logo`} fill style={{ objectFit: 'contain' }} className="object-contain filter brightness-0 invert p-1 md:p-2" />
                    ) : (
-                     <span className="text-white font-bold text-xl">{store.name[0]}</span>
+                     <span className="text-white font-bold text-lg md:text-xl">{store.name[0]}</span>
                    )}
                 </div>
-                <h4 className="font-bold text-2xl text-white mb-2">{store.name}</h4>
-                <p className="text-sm text-slate-300 font-medium">{t.floor} {store.floor} • {store.category?.name}</p>
+                <h4 className="font-bold text-lg md:text-2xl text-white mb-1 md:mb-2">{store.name}</h4>
+                <p className="text-[10px] md:text-sm text-slate-300 font-medium truncate">{t.floor} {store.floor} • {(translation.categories as Record<string, string>)[store.categoryId] || store.category?.name}</p>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 4. ENTERTAINMENT & LIFESTYLE */}
-      <section className="bg-slate-50 py-24 border-y border-slate-100">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t.beyondShopping}</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">{t.beyondDesc}</p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             {lifestyleBrands.slice(0,2).map((store, i) => (
-               <Link href={`/stores/${store.id}`} key={store.id} className="group relative rounded-2xl overflow-hidden h-100">
-                 <Image 
-                   src={store.image || `https://images.unsplash.com/photo-${i === 0 ? '1540497077202-7c8a3999166f' : '1552566626-52f8b828add9'}?w=800&q=80`} 
-                   alt={store.name}
-                   fill 
-                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                 />
-                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300"></div>
-                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-3 uppercase tracking-wider">
-                      {store.category?.name}
-                    </span>
-                    <h3 className="text-3xl font-bold text-white mb-2">{store.name}</h3>
-                 </div>
-               </Link>
-             ))}
-          </div>
-        </div>
-      </section>
 
       {/* 5. NEWS & EVENTS */}
       <section className="py-24">
@@ -292,7 +298,7 @@ export default function Home() {
                <Link href={`/events/${event.id}`} key={event.id} className="group flex flex-col md:flex-row gap-6 bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-xl transition-shadow duration-300">
                   <div className="w-full md:w-2/5 aspect-4/3 rounded-xl overflow-hidden shrink-0 relative">
                     {event.image ? (
-                      <Image src={event.image} alt={event.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <Image src={event.image} alt={event.title} fill style={{ objectFit: 'cover' }} className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
                       <div className="w-full h-full bg-slate-100"></div>
                     )}

@@ -1,7 +1,14 @@
+'use client'
+
 import { Briefcase, MapPin, Clock } from 'lucide-react'
 import { vacancies } from '@/lib/mockData'
+import { useLanguage } from '@/context/LanguageContext'
+import { useTranslation } from '@/lib/i18n'
 
 export default function VacanciesPage() {
+  const { lang } = useLanguage()
+  const t = useTranslation(lang).vacanciesPage
+
   const activeVacancies = vacancies.filter(v => v.status === 'Active');
 
   return (
@@ -9,8 +16,8 @@ export default function VacanciesPage() {
       <div className="bg-white py-16 border-b border-slate-200">
         <div className="container mx-auto px-4 text-center">
           <Briefcase className="w-12 h-12 text-red-600 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Careers at AF Mall</h1>
-          <p className="text-slate-600 max-w-2xl mx-auto">Join our dynamic team. Explore job opportunities from mall management and our prestigious retail partners.</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">{t.title}</h1>
+          <p className="text-slate-600 max-w-2xl mx-auto">{t.desc}</p>
         </div>
       </div>
 
@@ -28,20 +35,20 @@ export default function VacanciesPage() {
                         <Clock className="w-4 h-4" /> {vacancy.type}
                      </span>
                      <span className="border-l border-slate-300 pl-4">
-                        Posted: {new Date(vacancy.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {t.posted}: {new Date(vacancy.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                      </span>
                   </div>
                </div>
                
                <button className="shrink-0 bg-slate-900 text-white px-8 py-3 font-bold hover:bg-red-600 transition-colors w-full md:w-auto">
-                 APPLY NOW
+                 {t.applyNow}
                </button>
             </div>
           ))}
 
           {activeVacancies.length === 0 && (
             <div className="text-center py-20 bg-white border border-slate-200">
-              <p className="text-slate-500">There are no active vacancies at the moment. Please check back later.</p>
+              <p className="text-slate-500">{t.noVacancies}</p>
             </div>
           )}
         </div>

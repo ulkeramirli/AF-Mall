@@ -1,7 +1,14 @@
+'use client'
+
 import { Building, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { premises } from '@/lib/mockData'
+import { useLanguage } from '@/context/LanguageContext'
+import { useTranslation } from '@/lib/i18n'
 
 export default function LeasingPage() {
+  const { lang } = useLanguage()
+  const t = useTranslation(lang).leasingPage
+
   const availablePremises = premises.filter(p => p.status === 'Available');
 
   return (
@@ -11,8 +18,8 @@ export default function LeasingPage() {
         <div className="absolute inset-0 bg-red-600/10 mix-blend-overlay" />
         <div className="relative z-10 max-w-3xl mx-auto">
           <Building className="w-16 h-16 text-red-500 mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">Leasing Inquiries</h1>
-          <p className="text-xl text-slate-300">Position your brand in the city's most premium retail and entertainment destination.</p>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">{t.title}</h1>
+          <p className="text-xl text-slate-300">{t.desc}</p>
         </div>
       </div>
 
@@ -22,36 +29,36 @@ export default function LeasingPage() {
           {/* Left Column: Info */}
           <div className="lg:col-span-1 space-y-8">
             <div className="bg-white p-8 border border-slate-200">
-               <h3 className="text-2xl font-bold text-slate-900 mb-4">Why AF Mall?</h3>
+               <h3 className="text-2xl font-bold text-slate-900 mb-4">{t.whyUs}</h3>
                <ul className="space-y-4">
                  <li className="flex items-start gap-3">
                    <CheckCircle2 className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                   <span className="text-slate-600 text-sm leading-relaxed">Prime central location with high daily foot traffic.</span>
+                   <span className="text-slate-600 text-sm leading-relaxed">{t.why1}</span>
                  </li>
                  <li className="flex items-start gap-3">
                    <CheckCircle2 className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                   <span className="text-slate-600 text-sm leading-relaxed">State-of-the-art facilities and 24/7 security.</span>
+                   <span className="text-slate-600 text-sm leading-relaxed">{t.why2}</span>
                  </li>
                  <li className="flex items-start gap-3">
                    <CheckCircle2 className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                   <span className="text-slate-600 text-sm leading-relaxed">Dedicated marketing support for mall tenants.</span>
+                   <span className="text-slate-600 text-sm leading-relaxed">{t.why3}</span>
                  </li>
                </ul>
             </div>
 
             <div className="bg-red-600 p-8 text-white">
-               <h3 className="text-2xl font-bold mb-4">Contact Leasing</h3>
-               <p className="mb-2">Phone: +994 12 345 67 89</p>
-               <p className="mb-6">Email: leasing@af-mall.com</p>
+               <h3 className="text-2xl font-bold mb-4">{t.contactInfo}</h3>
+               <p className="mb-2">{t.phone}</p>
+               <p className="mb-6">{t.email}</p>
                <button className="bg-white text-red-600 font-bold w-full py-3 hover:bg-slate-100 transition-colors">
-                 SEND MESSAGE
+                 {t.sendMessage}
                </button>
             </div>
           </div>
 
           {/* Right Column: Available Premises */}
           <div className="lg:col-span-2">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">Available Premises</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">{t.availablePremises}</h2>
             
             <div className="space-y-6">
               {availablePremises.map((premise) => (
@@ -63,7 +70,7 @@ export default function LeasingPage() {
                       <div>
                          <h4 className="text-xl font-bold text-slate-900 mb-1">Unit {premise.id}</h4>
                          <p className="text-sm font-medium text-slate-500">
-                            Floor {premise.floor} &bull; {premise.type} &bull; {premise.area}
+                            {t.floor} {premise.floor} &bull; {premise.type} &bull; {premise.area}
                          </p>
                       </div>
                    </div>
@@ -71,7 +78,7 @@ export default function LeasingPage() {
                    <div className="flex flex-col items-end gap-3 border-t sm:border-t-0 sm:border-l border-slate-100 pt-4 sm:pt-0 sm:pl-6">
                       <span className="text-lg font-black text-slate-900">{premise.price}</span>
                       <button className="text-sm font-bold text-red-600 flex items-center gap-1 hover:text-red-700 transition-colors">
-                        INQUIRE <ArrowRight className="w-4 h-4" />
+                        {t.inquire} <ArrowRight className="w-4 h-4" />
                       </button>
                    </div>
                 </div>
@@ -79,7 +86,7 @@ export default function LeasingPage() {
 
               {availablePremises.length === 0 && (
                 <div className="text-center py-20 bg-white border border-slate-200">
-                  <p className="text-slate-500">Currently, there are no available premises. Please contact us to join the waiting list.</p>
+                  <p className="text-slate-500">{t.noPremises}</p>
                 </div>
               )}
             </div>

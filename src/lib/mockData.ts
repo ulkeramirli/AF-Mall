@@ -1,39 +1,7 @@
-export const categories = [
-  { id: '1', name: 'Fashion & Clothing', slug: 'fashion' },
-  { id: '2', name: 'Restaurants & Cafes', slug: 'dining' },
-  { id: '3', name: 'Electronics & Phones', slug: 'electronics' },
-  { id: '4', name: 'Beauty Salons', slug: 'beauty' },
-  { id: '5', name: 'Watches', slug: 'watches' },
-  { id: '6', name: 'Sports', slug: 'sports' },
-  { id: '7', name: 'Travel', slug: 'travel' },
-  { id: '8', name: 'Accessories', slug: 'accessories' },
-  { id: '9', name: 'Pilates & Fitness', slug: 'pilates' },
-  { id: '10', name: 'Language Courses', slug: 'education' }
-];
+import db from '../../data/db.json'
 
-export const stores = [
-  { id: '1', name: 'Zara', slug: 'zara', categoryId: '1', floor: '1', location: '1A', description: 'Trendy fashion for men and women.', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Zara_Logo.svg/1000px-Zara_Logo.svg.png', image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=1200&h=600&fit=crop' },
-  { id: '2', name: 'Apple Store', slug: 'apple', categoryId: '3', floor: '2', location: '2B', description: 'Experience the latest Apple products and smartphones.', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1000px-Apple_logo_black.svg.png', image: 'https://images.unsplash.com/photo-1556656793-08538906a9f8?w=1200&h=600&fit=crop' },
-  { id: '3', name: 'Rolex Boutique', slug: 'rolex', categoryId: '5', floor: '1', location: '1B', description: 'Premium luxury watches.', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c5/Rolex_logo.svg/1200px-Rolex_logo.svg.png', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1200&h=600&fit=crop' },
-  { id: '4', name: 'Starbucks', slug: 'starbucks', categoryId: '2', floor: '1', location: '1C', description: 'Coffee, pastries, and more.', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png', image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=1200&h=600&fit=crop' },
-  { id: '5', name: 'Sephora', slug: 'sephora', categoryId: '4', floor: '1', location: '1D', description: 'Discover the latest in beauty.', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Sephora_logo.svg/1280px-Sephora_logo.svg.png', image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1200&h=600&fit=crop' },
-  { id: '6', name: 'Nike', slug: 'nike', categoryId: '6', floor: '2', location: '2A', description: 'Sportswear and athletic footwear.', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/1200px-Logo_NIKE.svg.png', image: 'https://images.unsplash.com/photo-1552346154-21d32810baa3?w=1200&h=600&fit=crop' },
-];
-
-export const events = [
-  { id: '1', title: 'Summer Fashion Show', slug: 'summer-fashion-show', date: '2026-07-15T18:00:00Z', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1200&h=600&fit=crop', description: 'Check out the latest summer collections.', location: 'Main Atrium' },
-  { id: '2', title: 'Tech Expo 2026', slug: 'tech-expo-2026', date: '2026-08-10T10:00:00Z', image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=600&fit=crop', description: 'Discover the future of gadgets.', location: 'North Wing' },
-];
-
-export const vacancies = [
-  { id: '1', storeName: 'Zara', position: 'Sales Assistant', type: 'Full-time', status: 'Active', postedDate: '2026-09-01' },
-  { id: '2', storeName: 'AF Mall Management', position: 'Security Guard', type: 'Shift', status: 'Active', postedDate: '2026-09-05' },
-  { id: '3', storeName: 'Apple Store', position: 'Genius Bar Technician', type: 'Full-time', status: 'Closed', postedDate: '2026-08-20' },
-];
-
-export const premises = [
-  { id: 'P101', floor: '1', area: '120 sqm', type: 'Retail', status: 'Rented', tenant: 'Zara', price: '$5,000/mo' },
-  { id: 'P102', floor: '1', area: '80 sqm', type: 'Retail', status: 'Available', tenant: null, price: '$3,500/mo' },
-  { id: 'P201', floor: '2', area: '200 sqm', type: 'Restaurant', status: 'Available', tenant: null, price: '$8,000/mo' },
-  { id: 'P305', floor: '3', area: '60 sqm', type: 'Kiosk', status: 'Rented', tenant: 'Language Courses', price: '$2,000/mo' },
-];
+export const categories = db.categories;
+export const stores = db.stores;
+export const events = db.events;
+export const vacancies = db.vacancies;
+export const premises = db.premises;

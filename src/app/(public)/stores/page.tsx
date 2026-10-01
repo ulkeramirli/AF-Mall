@@ -8,6 +8,7 @@ import { stores as allStores, categories } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { Suspense } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function StoresContent() {
   const searchParams = useSearchParams()
@@ -35,184 +36,257 @@ function StoresContent() {
   const activeCategory = categoryId ? (t.categories as Record<string, string>)[categoryId] : t.stores.directory;
 
   return (
-    <div className="bg-[#fafafa] min-h-screen pb-32 font-sans selection:bg-black selection:text-white">
-      {/* Hero Section */}
-      <section className="relative h-[45vh] min-h-100 flex items-center justify-center overflow-hidden bg-black">
+    <div className="bg-slate-50 min-h-screen pb-32">
+      {/* Premium Glassmorphism Hero Section */}
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden flex items-center justify-center min-h-[500px]">
+        {/* Abstract Architectural Background */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=2400&q=85" 
-            alt="Mall Directory" 
+            src="https://images.unsplash.com/photo-1519567241046-7f4f0fee3ac1?w=2400&q=85"
+            alt="Mall Architecture"
             fill
-            className="object-cover opacity-40 scale-105 animate-[pulse_20s_ease-in-out_infinite]"
+            className="object-cover opacity-60"
             priority
           />
-          <div className="absolute inset-0 bg-linear-to-t from-[#fafafa] via-black/20 to-black/60" />
+          {/* Intense Frosted Glass Overlay */}
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-3xl" />
+          {/* Gradients for depth */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-slate-50" />
         </div>
+
+        {/* Dynamic Color Orbs for subtle ambient light */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-red-400/10 rounded-full blur-[120px] mix-blend-multiply animate-[pulse_8s_ease-in-out_infinite]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-rose-200/20 rounded-full blur-[150px] mix-blend-multiply animate-[pulse_12s_ease-in-out_infinite_reverse]" />
         
-        <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto mt-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-md text-xs text-white/80 uppercase tracking-widest font-medium mb-6">
-            <Link href="/" className="hover:text-white transition-colors">{t.nav.home}</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-white">{t.stores.brands}</span>
+        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px] relative z-10">
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+            
+            {/* Elegant Breadcrumb */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/80 backdrop-blur-md border border-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-8 md:mb-10"
+            >
+              <Link href="/" className="hover:text-red-600 transition-colors">{t.nav.home}</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-slate-900">{t.stores.brands}</span>
+            </motion.div>
+            
+            {/* Striking Typography */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tighter mb-6 leading-[1.1]"
+            >
+              {activeCategory}
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-12 md:mb-16 font-medium"
+            >
+              {t.stores.heroDesc}
+            </motion.p>
+            
+            {/* Massive Premium Search Bar */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="w-full max-w-2xl mx-auto"
+            >
+              <form action="/stores" method="GET" className="relative group">
+                {categoryId && <input type="hidden" name="category" value={categoryId} />}
+                
+                {/* Ambient Glow on Focus */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-red-500/20 via-rose-400/20 to-red-500/20 rounded-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700" />
+                
+                <div className="relative w-full flex items-center bg-white/90 backdrop-blur-2xl border border-white shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_16px_60px_-12px_rgba(0,0,0,0.1)] rounded-full overflow-hidden transition-all duration-500">
+                  <div className="pl-6 md:pl-8 pr-3 flex items-center justify-center">
+                    <Search className="w-5 h-5 md:w-6 md:h-6 text-slate-400 group-focus-within:text-red-500 transition-colors duration-300" />
+                  </div>
+                  <input 
+                    type="text" 
+                    name="q"
+                    placeholder={t.stores.searchBrands}
+                    className="w-full pl-2 pr-36 md:pr-48 py-5 md:py-6 bg-transparent text-slate-900 placeholder:text-slate-400 font-semibold text-base md:text-lg outline-none"
+                    defaultValue={q || ''}
+                  />
+                  <div className="absolute right-2 md:right-3 top-2 md:top-3 bottom-2 md:bottom-3">
+                    <button type="submit" className="h-full px-6 md:px-10 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base hover:bg-red-600 transition-colors shadow-md hover:shadow-xl hover:-translate-y-[1px] active:translate-y-0">
+                       <span className="hidden sm:block mr-2">Axtarış</span>
+                       <ArrowRight className="w-4 h-4 md:w-5 md:h-5 sm:hidden" />
+                    </button>
+                  </div>
+                </div>
+              </form>
+              
+              {/* Popular Searches */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-2 md:gap-3 text-xs md:text-sm font-medium text-slate-500">
+                <span className="mr-1">Trend:</span>
+                <Link href="/stores?q=Zara" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Zara</Link>
+                <Link href="/stores?q=Apple" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Apple</Link>
+                <Link href="/stores?q=Rolex" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Rolex</Link>
+              </div>
+            </motion.div>
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light text-white mb-6 tracking-tight drop-shadow-sm">
-            {activeCategory}
-          </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
-            {t.stores.heroDesc}
-          </p>
         </div>
       </section>
 
-      {/* Navigation & Filters */}
-      <div className="sticky top-[64px] md:top-[80px] z-30 bg-white/90 backdrop-blur-2xl border-b border-black/5 shadow-sm transition-all">
-        <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between py-3 md:py-4 gap-3 md:gap-4">
-            
-            {/* Search Form */}
-            <form action="/stores" method="GET" className="relative w-full md:w-80 group">
-              {categoryId && <input type="hidden" name="category" value={categoryId} />}
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-black transition-colors" />
-              <input 
-                type="text" 
-                name="q"
-                placeholder={t.stores.searchBrands}
-                className="w-full pl-10 pr-4 py-2 md:py-2.5 bg-gray-100/50 border border-gray-200 rounded-full text-sm outline-none focus:border-black focus:ring-1 focus:ring-black transition-all placeholder:text-gray-400"
-                defaultValue={q || ''}
-              />
-            </form>
-
-            {/* Categories */}
+      {/* Modern Tabs */}
+      <div className="sticky top-[64px] md:top-[80px] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all py-3">
+        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px]">
             <div 
-              className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+              className="flex items-center gap-2 overflow-x-auto pb-2 -mb-2 [&::-webkit-scrollbar]:hidden"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               <Link 
                 href="/stores"
-                className={`whitespace-nowrap px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all ${
-                  !categoryId 
-                    ? 'bg-black text-white shadow-md' 
-                    : 'bg-transparent text-gray-500 hover:text-black hover:bg-gray-100'
+                className={`relative whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all shrink-0 ${
+                  !categoryId ? 'text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
+                {!categoryId && (
+                  <motion.div layoutId="activeTab2" className="absolute inset-0 bg-slate-900 rounded-full" style={{ zIndex: -1 }} />
+                )}
                 {t.stores.allBrands}
               </Link>
               {categories.map(c => (
                 <Link 
                   key={c.id}
                   href={`/stores?category=${c.id}`}
-                  className={`whitespace-nowrap px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all ${
-                    categoryId === c.id 
-                      ? 'bg-black text-white shadow-md' 
-                      : 'bg-transparent text-gray-500 hover:text-black hover:bg-gray-100'
+                  className={`relative whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all shrink-0 ${
+                    categoryId === c.id ? 'text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
+                  {categoryId === c.id && (
+                    <motion.div layoutId="activeTab2" className="absolute inset-0 bg-slate-900 rounded-full" style={{ zIndex: -1 }} />
+                  )}
                   {(t.categories as Record<string, string>)[c.id] || c.name}
                 </Link>
               ))}
             </div>
-            
-          </div>
         </div>
       </div>
 
-      {/* Main Grid */}
-      <div className="container mx-auto px-4 lg:px-8 max-w-7xl mt-12 md:mt-20">
+      {/* Main Content */}
+      <div className="container mx-auto px-4 lg:px-8 max-w-[1440px] mt-10 md:mt-12">
         
-        <div className="flex justify-between items-end mb-10 border-b border-black/10 pb-4">
-          <h2 className="text-2xl font-light text-black">
+        <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-200">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
             {q ? `${t.stores.resultsFor} "${q}"` : t.stores.discover}
           </h2>
-          <p className="text-sm text-gray-500 font-medium tracking-wide uppercase">
-            <span className="text-black font-bold">{storesWithCategories.length}</span> {t.stores.brandsCount}
-          </p>
+          <div className="text-sm text-slate-500 font-medium">
+            <span className="text-slate-900 font-bold">{storesWithCategories.length}</span> {t.stores.brandsCount}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {storesWithCategories.map((store) => (
-            <Link 
-              href={`/stores/${store.id}`} 
-              key={store.id} 
-              className="group flex flex-col"
-            >
-              {/* Image Container */}
-              <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-gray-100 mb-6 shadow-sm">
-                {store.image ? (
-                  <Image 
-                    src={store.image} 
-                    alt={store.name} 
-                    fill
-                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105" 
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                    <span className="text-gray-300 font-light text-6xl">{store.name[0]}</span>
-                  </div>
-                )}
-                
-                {/* Overlay & Hover Action */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-full opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-sm">
-                  <ArrowRight className="w-4 h-4 text-black" />
-                </div>
-
-                {/* Category Tag */}
-                <div className="absolute top-4 left-4">
-                  <span className="px-4 py-1.5 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
-                    {(t.categories as Record<string, string>)[store.categoryId] || store.category?.name}
-                  </span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex items-start justify-between gap-4 px-2">
-                <div>
-                  <h3 className="font-semibold text-2xl text-black mb-2 group-hover:text-gray-600 transition-colors">
-                    {store.name}
-                  </h3>
-                  <div className="flex items-center gap-3 text-sm text-gray-500">
-                    <span className="flex items-center gap-1.5 font-medium">
-                      <MapPin className="w-4 h-4" />
-                      {t.stores.level} {store.floor} • {t.stores.zone} {store.location || 'A'}
-                    </span>
-                  </div>
-                </div>
-                
-                {/* Logo */}
-                {store.logo && (
-                  <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center p-2.5 shrink-0 group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300">
-                    <div className="relative w-full h-full">
-                      <Image 
-                        src={store.logo} 
-                        alt={`${store.name} logo`} 
-                        fill 
-                        className="object-contain" 
-                      />
+        {/* 4-Column Professional Grid (2 on mobile) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          <AnimatePresence>
+            {storesWithCategories.map((store, index) => (
+                <motion.div
+                  key={store.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ delay: index * 0.02, duration: 0.3 }}
+                  className="group col-span-1 h-full"
+                >
+                  <Link 
+                    href={`/stores/${store.id}`} 
+                    className="flex flex-col h-full bg-white rounded-xl md:rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 hover:-translate-y-1 transition-all duration-300"
+                  >
+                    {/* Image Header */}
+                    <div className="relative aspect-[16/10] md:aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
+                      {store.image ? (
+                        <Image 
+                          src={store.image} 
+                          alt={store.name} 
+                          fill
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                          <span className="text-slate-300 font-bold text-2xl md:text-4xl">{store.name[0]}</span>
+                        </div>
+                      )}
+                      
+                      {/* Category Badge */}
+                      <div className="absolute top-2 left-2 md:top-3 md:left-3">
+                        <span className="px-2 py-0.5 md:px-3 md:py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[8px] md:text-[10px] font-bold uppercase tracking-wider rounded-md shadow-sm">
+                          {(t.categories as Record<string, string>)[store.categoryId] || store.category?.name}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
+
+                    {/* Details Section */}
+                    <div className="flex-1 p-3 md:p-5 relative flex flex-col justify-between">
+                      
+                      {/* Logo Overlap */}
+                      {store.logo && (
+                        <div className="absolute -top-6 right-2 md:-top-10 md:right-4 w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg md:rounded-xl p-1 md:p-1.5 shadow-md border border-slate-100 z-10 group-hover:shadow-lg transition-shadow">
+                          <div className="relative w-full h-full rounded-md md:rounded-lg overflow-hidden">
+                            <Image 
+                              src={store.logo} 
+                              alt={`${store.name} logo`} 
+                              fill 
+                              className="object-contain" 
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-sm md:text-xl mb-1 group-hover:text-red-600 transition-colors pr-10 md:pr-14 truncate">
+                          {store.name}
+                        </h3>
+                        <p className="hidden md:block text-slate-500 text-sm line-clamp-2 mb-4">
+                          {t.storeDetails.genericDesc.replace('{floor}', store.floor)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 md:pt-4 mt-2 md:mt-0 border-t border-slate-100">
+                         <div className="flex items-center gap-1 md:gap-1.5 text-slate-500 md:text-slate-600 text-[10px] md:text-xs font-semibold">
+                           <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-500" />
+                           <span className="truncate">L{store.floor}</span>
+                           <span className="mx-0.5 md:mx-1">•</span>
+                           <span className="truncate">Z: {store.location || 'A'}</span>
+                         </div>
+                         <ArrowRight className="hidden md:block w-4 h-4 text-slate-300 group-hover:text-red-600 transition-colors group-hover:translate-x-1" />
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Empty State */}
         {storesWithCategories.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-32 text-center">
-            <div className="w-24 h-24 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Search className="w-10 h-10 text-gray-300" />
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-slate-200"
+          >
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+              <Search className="w-8 h-8 text-slate-300" />
             </div>
-            <h3 className="text-3xl font-light text-black mb-4">{t.stores.noBrandsFound}</h3>
-            <p className="text-gray-500 max-w-md mx-auto mb-10 font-light text-lg">
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">{t.stores.noBrandsFound}</h3>
+            <p className="text-slate-500 max-w-md mx-auto mb-8 font-medium">
               {t.stores.noBrandsDesc}
             </p>
             <Link 
               href="/stores" 
-              className="px-10 py-4 bg-black text-white text-sm font-bold tracking-widest uppercase rounded-full hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-full transition-colors shadow-sm"
             >
               {t.stores.clearFilters}
             </Link>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
@@ -221,7 +295,7 @@ function StoresContent() {
 
 export default function StoresPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#fafafa]"></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50"></div>}>
       <StoresContent />
     </Suspense>
   )

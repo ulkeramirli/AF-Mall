@@ -39,6 +39,7 @@ export default function AdminPremises() {
               <option value="Restaurant">Restaurant</option>
             </select>
             <input required name="price" placeholder="Price (e.g. $5,000/mo)" className="border border-slate-200 rounded-xl px-4 py-3" />
+            <input name="images" placeholder="Image URLs (comma separated for gallery)" className="border border-slate-200 rounded-xl px-4 py-3 md:col-span-2 lg:col-span-4" />
           </div>
           
           <div className="flex justify-end gap-4 mt-4">
@@ -52,6 +53,7 @@ export default function AdminPremises() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 text-slate-500 uppercase text-xs tracking-wider border-b border-slate-100">
+              <th className="p-6 font-bold w-16">Photo</th>
               <th className="p-6 font-bold">ID</th>
               <th className="p-6 font-bold">Floor & Area</th>
               <th className="p-6 font-bold">Type</th>
@@ -60,8 +62,17 @@ export default function AdminPremises() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {premises.map(p => (
+            {premises.map((p: any) => (
               <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
+                <td className="p-6">
+                  {p.images && p.images.length > 0 ? (
+                    <img src={p.images[0]} alt="" className="w-12 h-12 rounded-lg object-cover border border-slate-200" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                      <Building className="w-6 h-6" />
+                    </div>
+                  )}
+                </td>
                 <td className="p-6 font-bold text-slate-900">{p.id}</td>
                 <td className="p-6 text-slate-500">Floor {p.floor} • {p.area}</td>
                 <td className="p-6 text-slate-500">{p.type}</td>

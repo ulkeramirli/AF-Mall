@@ -75,6 +75,9 @@ export async function deleteVacancy(id: string) {
 // Premises (Offices)
 export async function addPremise(formData: FormData) {
   const db = await getDb()
+  const imagesRaw = formData.get('images')?.toString() || ''
+  const images = imagesRaw ? imagesRaw.split(',').map(s => s.trim()).filter(Boolean) : []
+  
   const newPremise = {
     id: 'P' + Math.floor(Math.random() * 1000),
     floor: formData.get('floor'),
@@ -82,7 +85,8 @@ export async function addPremise(formData: FormData) {
     type: formData.get('type'),
     status: 'Available',
     tenant: null,
-    price: formData.get('price')
+    price: formData.get('price'),
+    images: images
   }
   db.premises.push(newPremise)
   await saveDb(db)

@@ -22,8 +22,8 @@ export const translations = {
       infinityCascade: 'Premum Alış-veriş',
       cascade: 'Təcrübəsi',
       cascadeDesc: 'AF Mall-da ən yaxşı brendləri, ləzzətli yeməkləri və əyləncəni kəşf edin. Bizim geniş və müasir məkanımız sizə unudulmaz vaxt keçirmək üçün hər cür şərait yaradır.',
-      arPhotoSpots: 'Dünya Brendləri',
-      arPhotoSpotsDesc: 'Ən məşhur yerli və beynəlxalq geyim, ayaqqabı və aksessuar mağazaları.',
+      arPhotoSpots: 'Məşhur Mağazalar',
+      arPhotoSpotsDesc: 'Ən tanınmış yerli və beynəlxalq geyim, ayaqqabı və aksessuar butikləri.',
       waterShows: 'Restoran və Kafelər',
       waterShowsDesc: 'Dünya mətbəxindən fərqli dadlar, qəhvə evləri və rahat ailə restoranları.',
       viewSchedule: 'Mağazalara Baxın',
@@ -31,9 +31,9 @@ export const translations = {
       level1: 'Müasir Dizayn',
       mallHours: 'İş saatları',
       openEveryDay: 'Hər gün',
-      worldClassBrands: 'Dünya Səviyyəli Brendlər',
-      worldClassDesc: 'Dünyanın ən tanınmış moda evlərinin və həyat tərzi brendlərinin eksklüziv kolleksiyalarını kəşf edin.',
-      viewAllBrands: 'Bütün Brendlərə Baxın',
+      worldClassBrands: 'Premium Mağazalar',
+      worldClassDesc: 'Ən tanınmış moda evlərinin və xüsusi mağazaların eksklüziv kolleksiyalarını kəşf edin.',
+      viewAllBrands: 'Bütün Mağazalara Baxın',
       beyondShopping: 'Alış-verişdən Daha Artığı',
       beyondDesc: 'Mükəmməl əyləncə məkanlarımız, fitnes mərkəzlərimiz və kulinariya təcrübələrimizlə gününüzü daha da gözəlləşdirin.',
       whatsHappening: 'Nələr Baş Verir',
@@ -121,6 +121,10 @@ export const translations = {
       termsConditions: 'Qaydalar və Şərtlər',
       contactUs: 'Bizimlə Əlaqə',
       rights: 'Bütün hüquqlar qorunur. Mükəmməllik üçün dizayn edilmişdir.'
+    },
+    ai: {
+      greeting: 'Salam! Mən sizin AF Mall AI Köməkçinizəm. Bu gün mükəmməl mağaza və ya tədbir tapmaqda sizə necə kömək edə bilərəm?',
+      placeholder: 'Nəsə soruşun...'
     }
   },
   EN: {
@@ -144,8 +148,8 @@ export const translations = {
       infinityCascade: 'Ultimate Shopping',
       cascade: 'Experience',
       cascadeDesc: 'Discover the best brands, delicious dining, and lifestyle experiences at AF Mall. Our spacious and modern environment provides everything you need for an unforgettable visit.',
-      arPhotoSpots: 'Global Brands',
-      arPhotoSpotsDesc: 'The most popular local and international clothing, footwear, and accessory stores.',
+      arPhotoSpots: 'Popular Stores',
+      arPhotoSpotsDesc: 'The most renowned local and international clothing, footwear, and accessory boutiques.',
       waterShows: 'Dining & Cafes',
       waterShowsDesc: 'Different tastes from world cuisines, cozy coffee houses, and comfortable family restaurants.',
       viewSchedule: 'View Stores',
@@ -153,9 +157,9 @@ export const translations = {
       level1: 'Modern Design',
       mallHours: 'Mall Hours',
       openEveryDay: 'Open Every Day',
-      worldClassBrands: 'World-Class Brands',
-      worldClassDesc: 'Discover exclusive collections from the world\'s most renowned fashion houses and lifestyle brands.',
-      viewAllBrands: 'View All Brands',
+      worldClassBrands: 'Premium Stores',
+      worldClassDesc: 'Discover exclusive collections from renowned fashion houses and lifestyle boutiques.',
+      viewAllBrands: 'View All Stores',
       beyondShopping: 'Beyond Shopping',
       beyondDesc: 'Elevate your day with our premium entertainment venues, fitness centers, and culinary experiences.',
       whatsHappening: 'What\'s Happening',
@@ -243,6 +247,10 @@ export const translations = {
       termsConditions: 'Terms & Conditions',
       contactUs: 'Contact Us',
       rights: 'All rights reserved. Designed for excellence.'
+    },
+    ai: {
+      greeting: 'Hello! I am your AF Mall AI Concierge. How can I help you discover the perfect store or event today?',
+      placeholder: 'Ask anything...'
     }
   },
   RU: {
@@ -266,8 +274,8 @@ export const translations = {
       infinityCascade: 'Лучший опыт',
       cascade: 'Покупок',
       cascadeDesc: 'Откройте для себя лучшие бренды, вкусную еду и развлечения в AF Mall. Наше просторное и современное пространство создано для вашего идеального отдыха.',
-      arPhotoSpots: 'Мировые бренды',
-      arPhotoSpotsDesc: 'Самые популярные местные и международные магазины одежды, обуви и аксессуаров.',
+      arPhotoSpots: 'Популярные Бутики',
+      arPhotoSpotsDesc: 'Самые востребованные местные и международные магазины одежды, обуви и аксессуаров.',
       waterShows: 'Рестораны и Кафе',
       waterShowsDesc: 'Разнообразие блюд мировой кухни, уютные кофейни и семейные рестораны.',
       viewSchedule: 'Смотреть магазины',
@@ -275,9 +283,9 @@ export const translations = {
       level1: 'Современный дизайн',
       mallHours: 'Часы работы',
       openEveryDay: 'Каждый день',
-      worldClassBrands: 'Мировые Бренды',
-      worldClassDesc: 'Откройте для себя эксклюзивные коллекции самых известных в мире домов моды и лайфстайл-брендов.',
-      viewAllBrands: 'Смотреть все бренды',
+      worldClassBrands: 'Премиальные Магазины',
+      worldClassDesc: 'Откройте для себя эксклюзивные коллекции от известных домов моды и эксклюзивных бутиков.',
+      viewAllBrands: 'Смотреть все магазины',
       beyondShopping: 'Больше, чем шопинг',
       beyondDesc: 'Сделайте свой день ярче с нашими премиальными развлекательными заведениями, фитнес-центрами и кулинарными открытиями.',
       whatsHappening: 'Что происходит',
@@ -365,6 +373,10 @@ export const translations = {
       termsConditions: 'Условия Использования',
       contactUs: 'Связаться с Нами',
       rights: 'Все права защищены. Создано для совершенства.'
+    },
+    ai: {
+      greeting: 'Здравствуйте! Я ваш ИИ-ассистент AF Mall. Как я могу помочь вам найти идеальный магазин или мероприятие сегодня?',
+      placeholder: 'Спросите что-нибудь...'
     }
   }
 }

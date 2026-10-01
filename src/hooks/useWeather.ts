@@ -21,19 +21,19 @@ export function useWeather() {
             setWeather('sunny');
           } else if (code >= 51 && code <= 67) {
             setWeather('rainy');
-          } else if (code >= 80 && code <= 82) {
-            setWeather('rainy');
           } else if (code >= 95 && code <= 99) {
             setWeather('rainy');
           } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
             setWeather('snowy');
           } else {
-            // Default to cloudy for codes like 2, 3, 45, 48
+            // Default to cloudy for codes like 2, 3, 45, 48, and 80-82 (showers)
             setWeather('cloudy');
           }
         }
       } catch (error) {
-        console.error("Failed to fetch weather", error);
+        // Use console.warn instead of console.error to prevent Next.js from 
+        // showing the error overlay if an adblocker blocks the weather API.
+        console.warn("Failed to fetch weather (possibly blocked by adblocker):", error);
         setWeather('cloudy'); // Fallback
       } finally {
         setLoading(false);

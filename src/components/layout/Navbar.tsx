@@ -2,25 +2,21 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Search, MapPin, X, Globe, ShoppingBag, Coffee, MoreHorizontal, Menu, Home, Ticket, Map, Briefcase, Building } from 'lucide-react'
+import Image from 'next/image'
+import { Search, MapPin, X, ShoppingBag, MoreHorizontal, Menu, Home, Ticket, Map, Briefcase, Building } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion, AnimatePresence } from 'framer-motion'
-import { vacancies, premises } from '@/lib/mockData'
+
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
   
   const { lang, setLang } = useLanguage()
   const t = useTranslation(lang).nav
-  const activeVacanciesCount = vacancies.filter(v => v.status === 'Active').length;
-  const activePremisesCount = premises.filter(p => p.status === 'Available').length;
 
-  const isHome = pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +29,7 @@ export function Navbar() {
   const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
   const changeLang = (newLang: string) => {
-    setLang(newLang as any)
+    setLang(newLang as 'AZ' | 'EN' | 'RU')
   }
 
   const headerClass = scrolled 
@@ -47,7 +43,7 @@ export function Navbar() {
       <header className={`${headerClass} transition-all duration-300 h-16 md:h-20 flex items-center`}>
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0 z-50">
+          <div className="shrink-0 z-50">
             <Link href="/" className="flex items-center gap-3 group">
             {/* Elegant Icon */}
             <div className="relative w-10 h-10 md:w-11 md:h-11 flex items-center justify-center shrink-0">
@@ -63,11 +59,18 @@ export function Navbar() {
           </div>
 
           {/* Desktop Links (Center) */}
-          <div className={`hidden lg:flex items-center gap-8 font-semibold ${textColor} text-base`}>
+          <div className={`hidden lg:flex items-center gap-4 xl:gap-6 font-semibold ${textColor} text-sm xl:text-base whitespace-nowrap`}>
+            <Link href="/" className="hover:text-red-600 transition-colors">{t.home}</Link>
             <Link href="/stores" className="hover:text-red-600 transition-colors">{t.storesAndRestaurants}</Link>
-            <Link href="/stores?category=2" className="hover:text-red-600 transition-colors">{t.entertainment}</Link>
+            {/* <Link href="/stores?category=2" className="hover:text-red-600 transition-colors">{t.entertainment}</Link> */}
             <Link href="/map" className="hover:text-red-600 transition-colors">{t.map}</Link>
             <Link href="/services" className="hover:text-red-600 transition-colors">{t.services || 'Xidmətlər'}</Link>
+            <Link href="/leasing" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
+              {t.leasing || 'İcarə'}
+            </Link>
+            <Link href="/vacancies" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
+              {t.vacancies || 'Vakansiyalar'}
+            </Link>
           </div>
 
           {/* Desktop Actions (Right) */}
@@ -85,10 +88,13 @@ export function Navbar() {
                 className="flex items-center gap-2 hover:text-red-600 transition-colors cursor-pointer border-l border-slate-200 pl-6 ml-2 py-4 -my-4"
                 onMouseEnter={() => setIsLangDropdownOpen(true)}
               >
-                 <img 
+                 <Image 
                    src={`https://flagcdn.com/${lang === 'AZ' ? 'az' : lang === 'EN' ? 'gb' : 'ru'}.svg`} 
                    alt={lang}
-                   className="w-5 h-[14px] object-cover rounded-[2px] shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
+                   width={20}
+                   height={14}
+                   unoptimized
+                   className="w-5 h-3.5 object-cover rounded-xs shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
                  />
                  <span className="font-bold">{lang}</span>
               </div>
@@ -96,7 +102,7 @@ export function Navbar() {
               {/* Invisible bridge to prevent mouse leave */}
               <div className={`absolute top-full right-0 w-full h-4 ${isLangDropdownOpen ? 'block' : 'hidden'}`}></div>
 
-              <div className={`absolute top-[calc(100%+0.5rem)] right-0 bg-white border border-slate-100 shadow-xl rounded-xl overflow-hidden min-w-[140px] flex flex-col z-50 transition-all duration-200 origin-top-right ${isLangDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
+              <div className={`absolute top-[calc(100%+0.5rem)] right-0 bg-white border border-slate-100 shadow-xl rounded-xl overflow-hidden min-w-35 flex flex-col z-50 transition-all duration-200 origin-top-right ${isLangDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
                 {[
                   { code: 'AZ', flag: 'az', label: 'Azərbaycan' }, 
                   { code: 'EN', flag: 'gb', label: 'English' }, 
@@ -111,10 +117,13 @@ export function Navbar() {
                     className={`px-4 py-3 text-sm font-bold text-left transition-colors flex items-center justify-between group ${lang === l.code ? 'text-red-600 bg-red-50/50' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                   >
                     <span className="flex items-center gap-2.5">
-                      <img 
+                      <Image 
                         src={`https://flagcdn.com/${l.flag}.svg`} 
                         alt={l.code}
-                        className="w-5 h-[14px] object-cover rounded-[2px] shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
+                        width={20}
+                        height={14}
+                        unoptimized
+                        className="w-5 h-3.5 object-cover rounded-xs shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
                       />
                       <span>{l.code}</span>
                     </span>
@@ -133,15 +142,18 @@ export function Navbar() {
                   onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)} 
                   className={`flex items-center gap-2 p-2 font-bold ${isMobileMenuOpen ? 'text-slate-900' : textColor}`}
                >
-                  <img 
+                  <Image 
                     src={`https://flagcdn.com/${lang === 'AZ' ? 'az' : lang === 'EN' ? 'gb' : 'ru'}.svg`} 
                     alt={lang}
-                    className="w-5 h-[14px] object-cover rounded-[2px] shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
+                    width={20}
+                    height={14}
+                    unoptimized
+                    className="w-5 h-3.5 object-cover rounded-xs shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
                   />
                   {lang}
                </button>
                {/* Dropdown for mobile */}
-               <div className={`absolute top-[calc(100%+0.5rem)] right-0 bg-white border border-slate-100 shadow-xl rounded-xl overflow-hidden min-w-[140px] flex flex-col z-50 transition-all duration-200 origin-top-right ${isLangDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
+               <div className={`absolute top-[calc(100%+0.5rem)] right-0 bg-white border border-slate-100 shadow-xl rounded-xl overflow-hidden min-w-35 flex flex-col z-50 transition-all duration-200 origin-top-right ${isLangDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
                  {[
                    { code: 'AZ', flag: 'az' }, 
                    { code: 'EN', flag: 'gb' }, 
@@ -156,10 +168,13 @@ export function Navbar() {
                      className={`px-4 py-3 text-sm font-bold text-left transition-colors flex items-center justify-between group ${lang === l.code ? 'text-red-600 bg-red-50/50' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                    >
                      <span className="flex items-center gap-2.5">
-                       <img 
+                       <Image 
                          src={`https://flagcdn.com/${l.flag}.svg`} 
                          alt={l.code}
-                         className="w-5 h-[14px] object-cover rounded-[2px] shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
+                         width={20}
+                         height={14}
+                         unoptimized
+                         className="w-5 h-3.5 object-cover rounded-xs shadow-[0_0_2px_rgba(0,0,0,0.2)]" 
                        />
                        <span>{l.code}</span>
                      </span>
@@ -193,7 +208,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 bg-white z-[45] flex flex-col pt-24 px-6 pb-8 overflow-y-auto"
+            className="fixed inset-0 bg-white z-45 flex flex-col pt-24 px-6 pb-8 overflow-y-auto"
           >
             {/* Search Bar in Mobile Menu */}
             <div className="relative mb-8 mt-4">
@@ -214,8 +229,8 @@ export function Navbar() {
                 { href: '/map', label: t.map, icon: Map },
                 { href: '/services', label: t.services || 'Xidmətlər', icon: MoreHorizontal },
                 { href: '/how-to-get', label: t.howToGet, icon: MapPin },
-                { href: '/leasing', label: t.leasing || 'İcarə', icon: Building, badge: activePremisesCount },
-                { href: '/vacancies', label: t.vacancies || 'Vakansiyalar', icon: Briefcase, badge: activeVacanciesCount }
+                { href: '/leasing', label: t.leasing || 'İcarə', icon: Building },
+                { href: '/vacancies', label: t.vacancies || 'Vakansiyalar', icon: Briefcase }
               ].map((link, i) => {
                 const Icon = link.icon;
                 return (
@@ -230,11 +245,6 @@ export function Navbar() {
                       <Icon className="w-5 h-5 text-slate-500 group-hover:text-red-600 transition-colors" />
                     </div>
                     <span>{link.label}</span>
-                    {link.badge !== undefined && link.badge > 0 && (
-                      <span className="ml-auto bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm shadow-red-600/30">
-                        {link.badge}
-                      </span>
-                    )}
                   </Link>
                 </motion.div>
                 )

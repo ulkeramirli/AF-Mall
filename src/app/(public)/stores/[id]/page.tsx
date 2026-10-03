@@ -44,34 +44,34 @@ export default function StorePage({ params }: Props) {
         )}
         <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
         
-        <div className="absolute bottom-0 left-0 w-full p-8 md:p-16">
-          <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-end justify-between gap-8">
-            <div className="flex items-center gap-8">
+        <div className="absolute bottom-0 left-0 w-full px-5 py-6 md:p-16">
+          <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
               {/* Logo Box */}
-              <div className="w-32 h-32 md:w-48 md:h-48 bg-white rounded-3xl shadow-2xl flex items-center justify-center p-4 overflow-hidden relative border-4 border-white/20 backdrop-blur-md">
+              <div className="w-24 h-24 md:w-48 md:h-48 shrink-0 bg-white rounded-2xl md:rounded-3xl shadow-2xl flex items-center justify-center p-3 overflow-hidden relative border-4 border-white/20 backdrop-blur-md">
                 {store.logo ? (
-                  <Image src={store.logo} alt={`${store.name} logo`} fill className="object-contain p-4" />
+                  <Image src={store.logo} alt={`${store.name} logo`} fill className="object-contain p-3 md:p-4" />
                 ) : (
-                  <span className="text-5xl font-black text-slate-300">{store.name[0]}</span>
+                  <span className="text-4xl md:text-5xl font-black text-slate-300">{store.name[0]}</span>
                 )}
               </div>
               
-              <div className="pb-4">
-                <div className="flex items-center gap-2 text-sm text-slate-300 mb-3 tracking-widest uppercase font-semibold">
+              <div className="pb-0 md:pb-4">
+                <div className="flex flex-wrap items-center gap-1.5 md:gap-2 text-[10px] md:text-sm text-slate-300 mb-2 md:mb-3 tracking-widest uppercase font-semibold">
                   <Link href="/" className="hover:text-white transition-colors">{t.nav.home}</Link>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                   <Link href="/stores" className="hover:text-white transition-colors">{t.stores.brands}</Link>
-                  <ChevronRight className="w-4 h-4" />
-                  <span className="text-red-400">{store.name}</span>
+                  <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-red-400 truncate max-w-[120px] md:max-w-none">{store.name}</span>
                 </div>
-                <h1 className="text-4xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-2">{store.name}</h1>
-                <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-1 rounded-full text-sm font-bold shadow-inner">
+                <h1 className="text-3xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-2">{store.name}</h1>
+                <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-3 py-1 md:px-4 md:py-1 rounded-full text-xs md:text-sm font-bold shadow-inner">
                   {categoryName}
                 </span>
               </div>
             </div>
             
-            <div className="pb-4 flex gap-4">
+            <div className="pb-0 md:pb-4 flex gap-3 md:gap-4 w-full md:w-auto">
                <button className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur text-white flex items-center justify-center transition-all border border-white/10">
                  <Share2 className="w-5 h-5" />
                </button>
@@ -91,7 +91,7 @@ export default function StorePage({ params }: Props) {
              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100">
                <h2 className="text-2xl font-bold text-slate-900 mb-6">{t.storeDetails.about} {store.name}</h2>
                <p className="text-slate-600 leading-relaxed text-lg mb-8">
-                 {store.description} {t.storeDetails.genericDesc.replace('{floor}', store.floor)}
+                 {(t.storeDescriptions as Record<string, string>)?.[store.slug] || store.description || t.storeDetails.genericDesc.replace('{floor}', store.floor)}
                </p>
                
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">

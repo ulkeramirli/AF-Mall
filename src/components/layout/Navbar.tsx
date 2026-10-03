@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, MapPin, X, ShoppingBag, MoreHorizontal, Menu, Home, Ticket, Map, Briefcase, Building } from 'lucide-react'
+import { Search, MapPin, X, ShoppingBag, MoreHorizontal, Menu, Home, Map, Briefcase, Building } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -221,11 +221,10 @@ export function Navbar() {
             </div>
 
             {/* Links */}
-            <div className="flex flex-col text-xl font-medium text-slate-800 divide-y divide-slate-100">
+            <div className="flex flex-col text-lg font-medium text-slate-800 divide-y divide-slate-100">
               {[
                 { href: '/', label: t.home, icon: Home },
                 { href: '/stores', label: t.storesAndRestaurants, icon: ShoppingBag },
-                { href: '/stores?category=2', label: t.entertainment, icon: Ticket },
                 { href: '/map', label: t.map, icon: Map },
                 { href: '/services', label: t.services || 'Xidmətlər', icon: MoreHorizontal },
                 { href: '/how-to-get', label: t.howToGet, icon: MapPin },
@@ -240,9 +239,9 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + i * 0.05 }}
                 >
-                  <Link href={link.href} onClick={toggleMenu} className="flex items-center gap-4 py-4 hover:text-red-600 transition-colors group">
-                    <div className="w-10 h-10 rounded-full bg-slate-50 group-hover:bg-red-50 flex items-center justify-center shrink-0 transition-colors">
-                      <Icon className="w-5 h-5 text-slate-500 group-hover:text-red-600 transition-colors" />
+                  <Link href={link.href} onClick={toggleMenu} className="flex items-center gap-4 py-3.5 hover:text-red-600 transition-colors group">
+                    <div className="w-9 h-9 rounded-full bg-slate-50 group-hover:bg-red-50 flex items-center justify-center shrink-0 transition-colors">
+                      <Icon className="w-4 h-4 text-slate-500 group-hover:text-red-600 transition-colors" />
                     </div>
                     <span>{link.label}</span>
                   </Link>

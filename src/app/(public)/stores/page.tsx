@@ -38,7 +38,7 @@ function StoresContent() {
   return (
     <div className="bg-slate-50 min-h-screen pb-32">
       {/* Premium Glassmorphism Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden flex items-center justify-center min-h-[500px]">
+      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden flex items-center justify-center min-h-[350px]">
         {/* Abstract Architectural Background */}
         <div className="absolute inset-0 z-0">
           <Image 
@@ -77,7 +77,7 @@ function StoresContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tighter mb-6 leading-[1.1]"
+              className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-4 leading-tight"
             >
               {activeCategory}
             </motion.h1>
@@ -86,7 +86,7 @@ function StoresContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-12 md:mb-16 font-medium"
+              className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8 md:mb-10 font-medium"
             >
               {t.stores.heroDesc}
             </motion.p>
@@ -112,45 +112,43 @@ function StoresContent() {
                     type="text" 
                     name="q"
                     placeholder={t.stores.searchBrands}
-                    className="w-full pl-2 pr-36 md:pr-48 py-5 md:py-6 bg-transparent text-slate-900 placeholder:text-slate-400 font-semibold text-base md:text-lg outline-none"
+                    className="w-full pl-2 pr-32 md:pr-40 py-3.5 md:py-4 bg-transparent text-slate-900 placeholder:text-slate-400 font-semibold text-sm md:text-base outline-none"
                     defaultValue={q || ''}
                   />
-                  <div className="absolute right-2 md:right-3 top-2 md:top-3 bottom-2 md:bottom-3">
-                    <button type="submit" className="h-full px-6 md:px-10 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base hover:bg-red-600 transition-colors shadow-md hover:shadow-xl hover:-translate-y-[1px] active:translate-y-0">
+                  <div className="absolute right-1.5 md:right-2 top-1.5 md:top-2 bottom-1.5 md:bottom-2">
+                    <button type="submit" className="h-full px-6 md:px-8 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm hover:bg-red-600 transition-colors shadow-md hover:shadow-xl hover:-translate-y-[1px] active:translate-y-0">
                        <span className="hidden sm:block mr-2">Axtarış</span>
                        <ArrowRight className="w-4 h-4 md:w-5 md:h-5 sm:hidden" />
                     </button>
                   </div>
                 </div>
               </form>
-              
-              {/* Popular Searches */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-2 md:gap-3 text-xs md:text-sm font-medium text-slate-500">
-                <span className="mr-1">Trend:</span>
-                <Link href="/stores?q=Zara" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Zara</Link>
-                <Link href="/stores?q=Apple" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Apple</Link>
-                <Link href="/stores?q=Rolex" className="px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:bg-white hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm">Rolex</Link>
-              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Modern Tabs */}
-      <div className="sticky top-[64px] md:top-[80px] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all py-3">
-        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px]">
+      <div className="sticky top-[64px] md:top-[80px] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm transition-all py-4">
+        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px] relative">
+            {/* Fade edges for scroll indication */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10 md:hidden" />
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+            
             <div 
-              className="flex items-center gap-2 overflow-x-auto pb-2 -mb-2 [&::-webkit-scrollbar]:hidden"
+              className="flex items-center gap-3 overflow-x-auto pb-1 -mb-1 [&::-webkit-scrollbar]:hidden"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               <Link 
                 href="/stores"
-                className={`relative whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all shrink-0 ${
-                  !categoryId ? 'text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                className={`relative whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shrink-0 border ${
+                  !categoryId 
+                    ? 'text-white border-transparent shadow-lg shadow-red-600/30' 
+                    : 'text-slate-600 hover:text-slate-900 bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm'
                 }`}
               >
                 {!categoryId && (
-                  <motion.div layoutId="activeTab2" className="absolute inset-0 bg-slate-900 rounded-full" style={{ zIndex: -1 }} />
+                  <motion.div layoutId="activeTab2" className="absolute inset-0 bg-red-600 rounded-full" style={{ zIndex: -1 }} />
                 )}
                 {t.stores.allBrands}
               </Link>
@@ -158,12 +156,14 @@ function StoresContent() {
                 <Link 
                   key={c.id}
                   href={`/stores?category=${c.id}`}
-                  className={`relative whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all shrink-0 ${
-                    categoryId === c.id ? 'text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  className={`relative whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shrink-0 border ${
+                    categoryId === c.id 
+                      ? 'text-white border-transparent shadow-lg shadow-red-600/30' 
+                      : 'text-slate-600 hover:text-slate-900 bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm'
                   }`}
                 >
                   {categoryId === c.id && (
-                    <motion.div layoutId="activeTab2" className="absolute inset-0 bg-slate-900 rounded-full" style={{ zIndex: -1 }} />
+                    <motion.div layoutId="activeTab2" className="absolute inset-0 bg-red-600 rounded-full" style={{ zIndex: -1 }} />
                   )}
                   {(t.categories as Record<string, string>)[c.id] || c.name}
                 </Link>
@@ -202,7 +202,7 @@ function StoresContent() {
                     className="flex flex-col h-full bg-white rounded-xl md:rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 hover:-translate-y-1 transition-all duration-300"
                   >
                     {/* Image Header */}
-                    <div className="relative aspect-[16/10] md:aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
+                    <div className="relative aspect-[4/3] md:aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
                       {store.image ? (
                         <Image 
                           src={store.image} 
@@ -212,25 +212,25 @@ function StoresContent() {
                         />
                       ) : (
                         <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                          <span className="text-slate-300 font-bold text-2xl md:text-4xl">{store.name[0]}</span>
+                          <span className="text-slate-300 font-bold text-3xl md:text-4xl">{store.name[0]}</span>
                         </div>
                       )}
                       
                       {/* Category Badge */}
                       <div className="absolute top-2 left-2 md:top-3 md:left-3">
-                        <span className="px-2 py-0.5 md:px-3 md:py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[8px] md:text-[10px] font-bold uppercase tracking-wider rounded-md shadow-sm">
+                        <span className="px-2 py-1 md:px-3 md:py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] md:text-[10px] font-bold uppercase tracking-wider rounded-md shadow-sm">
                           {(t.categories as Record<string, string>)[store.categoryId] || store.category?.name}
                         </span>
                       </div>
                     </div>
 
                     {/* Details Section */}
-                    <div className="flex-1 p-3 md:p-5 relative flex flex-col justify-between">
+                    <div className="flex-1 p-4 md:p-5 relative flex flex-col justify-between">
                       
                       {/* Logo Overlap */}
                       {store.logo && (
-                        <div className="absolute -top-6 right-2 md:-top-10 md:right-4 w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg md:rounded-xl p-1 md:p-1.5 shadow-md border border-slate-100 z-10 group-hover:shadow-lg transition-shadow">
-                          <div className="relative w-full h-full rounded-md md:rounded-lg overflow-hidden">
+                        <div className="absolute -top-7 right-3 md:-top-10 md:right-4 w-14 h-14 md:w-16 md:h-16 bg-white rounded-xl md:rounded-xl p-1.5 md:p-1.5 shadow-md border border-slate-100 z-10 group-hover:shadow-lg transition-shadow">
+                          <div className="relative w-full h-full rounded-lg overflow-hidden">
                             <Image 
                               src={store.logo} 
                               alt={`${store.name} logo`} 
@@ -242,17 +242,17 @@ function StoresContent() {
                       )}
 
                       <div>
-                        <h3 className="font-bold text-slate-900 text-sm md:text-xl mb-1 group-hover:text-red-600 transition-colors pr-10 md:pr-14 truncate">
+                        <h3 className="font-bold text-slate-900 text-base md:text-xl mb-1.5 group-hover:text-red-600 transition-colors pr-14 md:pr-14 truncate">
                           {store.name}
                         </h3>
-                        <p className="hidden md:block text-slate-500 text-sm line-clamp-2 mb-4">
-                          {t.storeDetails.genericDesc.replace('{floor}', store.floor)}
+                        <p className="text-slate-500 text-xs md:text-sm line-clamp-3 mb-3 md:mb-4 leading-snug">
+                          {(t.storeDescriptions as Record<string, string>)?.[store.slug] || store.description || t.storeDetails.genericDesc.replace('{floor}', store.floor)}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 md:pt-4 mt-2 md:mt-0 border-t border-slate-100">
-                         <div className="flex items-center gap-1 md:gap-1.5 text-slate-500 md:text-slate-600 text-[10px] md:text-xs font-semibold">
-                           <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-500" />
+                      <div className="flex items-center justify-between pt-3 md:pt-4 mt-auto border-t border-slate-100">
+                         <div className="flex items-center gap-1.5 md:gap-1.5 text-slate-500 md:text-slate-600 text-xs font-semibold">
+                           <MapPin className="w-3.5 h-3.5 md:w-3.5 md:h-3.5 text-red-500" />
                            <span className="truncate">L{store.floor}</span>
                            <span className="mx-0.5 md:mx-1">•</span>
                            <span className="truncate">Z: {store.location || 'A'}</span>

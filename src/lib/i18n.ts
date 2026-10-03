@@ -125,6 +125,14 @@ export const translations = {
     ai: {
       greeting: 'Salam! Mən sizin AF Mall AI Köməkçinizəm. Bu gün mükəmməl mağaza və ya tədbir tapmaqda sizə necə kömək edə bilərəm?',
       placeholder: 'Nəsə soruşun...'
+    },
+    storeDescriptions: {
+      zara: 'Kişi və qadınlar üçün ən son dəb geyimləri və aksesuarlar.',
+      apple: 'Ən yeni Apple məhsulları, iPhone-lar və Mac kompüterlərini kəşf edin.',
+      rolex: 'Ən yüksək keyfiyyətli və dəqiq İsveçrə saatları.',
+      starbucks: 'Dadlı qəhvə, şirniyyatlar və rahat iş mühiti.',
+      sephora: 'Gözəllik dünyasında ən son kosmetika və ətir brendləri.',
+      nike: 'İdman geyimləri, krossovkalar və aktiv həyat tərzi üçün hər şey.'
     }
   },
   EN: {
@@ -251,6 +259,14 @@ export const translations = {
     ai: {
       greeting: 'Hello! I am your AF Mall AI Concierge. How can I help you discover the perfect store or event today?',
       placeholder: 'Ask anything...'
+    },
+    storeDescriptions: {
+      zara: 'Trendy fashion for men and women, keeping you stylish everyday.',
+      apple: 'Experience the latest Apple products, iPhones, and Mac computers.',
+      rolex: 'Premium luxury watches from Switzerland.',
+      starbucks: 'Coffee, pastries, and a cozy environment to relax or work.',
+      sephora: 'Discover the latest in beauty, skincare, and perfumes.',
+      nike: 'Sportswear, athletic footwear, and everything for an active lifestyle.'
     }
   },
   RU: {
@@ -377,6 +393,14 @@ export const translations = {
     ai: {
       greeting: 'Здравствуйте! Я ваш ИИ-ассистент AF Mall. Как я могу помочь вам найти идеальный магазин или мероприятие сегодня?',
       placeholder: 'Спросите что-нибудь...'
+    },
+    storeDescriptions: {
+      zara: 'Стильная и модная одежда для мужчин и женщин на каждый день.',
+      apple: 'Испытайте новейшие продукты Apple, смартфоны и компьютеры Mac.',
+      rolex: 'Швейцарские часы высочайшего качества и точности.',
+      starbucks: 'Вкусный кофе, выпечка и уютная атмосфера для работы.',
+      sephora: 'Откройте для себя последние новинки косметики и парфюмерии.',
+      nike: 'Спортивная одежда, кроссовки и всё для активного образа жизни.'
     }
   }
 }

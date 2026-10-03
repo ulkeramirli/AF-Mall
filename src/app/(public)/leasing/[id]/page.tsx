@@ -54,7 +54,7 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="bg-slate-50 min-h-screen pb-24">
-      <div className="container mx-auto px-6 md:px-12 py-12 max-w-6xl">
+      <div className="container mx-auto px-6 md:px-12 pt-32 pb-12 md:pt-40 md:pb-20 max-w-6xl">
         
         {/* Top bar with back button */}
         <div className="mb-8">
@@ -102,7 +102,7 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-6">{uiText.gallery}</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  {images.slice(1).map((img, idx) => (
+                  {images.slice(1).map((img: string, idx: number) => (
                     <div key={idx} className="rounded-2xl overflow-hidden border border-slate-200 aspect-video hover:opacity-90 cursor-pointer transition-opacity">
                       <img src={img} alt={`Gallery ${idx+1}`} className="w-full h-full object-cover" />
                     </div>
@@ -148,6 +148,15 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
                       <p className="font-bold text-slate-900">{premise.type}</p>
                     </div>
                  </div>
+                 <div className="flex items-center gap-4 bg-green-50 p-4 rounded-xl border border-green-100">
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-green-600 shadow-sm">
+                       <span className="font-bold text-xl">$</span>
+                    </div>
+                    <div>
+                      <p className="text-sm text-green-700 font-medium">Monthly Rent</p>
+                      <p className="font-bold text-slate-900 text-lg">{premise.price}</p>
+                    </div>
+                 </div>
                </div>
             </div>
 
@@ -156,17 +165,6 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
           {/* Sidebar (Right) */}
           <div className="lg:col-span-4">
             <div className="sticky top-28 space-y-6">
-              
-              {/* Pricing Card */}
-              <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg shadow-slate-200/40 text-center">
-                 <p className="text-slate-500 font-medium mb-2">Monthly Rent</p>
-                 <div className="text-4xl font-black text-slate-900 mb-6">{premise.price}</div>
-                 <hr className="border-slate-100 mb-6" />
-                 <div className="flex items-center justify-center gap-2 text-slate-600 text-sm">
-                    <Check className="w-4 h-4 text-green-500" /> Maintenance included
-                 </div>
-              </div>
-
               {/* Contact Card */}
               <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl shadow-slate-900/10">
                  <h3 className="text-xl font-bold mb-6">{uiText.requestInfo}</h3>

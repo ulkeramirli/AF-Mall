@@ -10,7 +10,7 @@ import Image from 'next/image'
 export default function EventsPage() {
   const { lang } = useLanguage()
   const translation = useTranslation(lang)
-  const t = translation.hero // Reusing some strings from hero for simplicity
+  const t = translation.home // Fixed: using home instead of hero
 
   return (
     <div className="bg-slate-50 min-h-screen pb-32">

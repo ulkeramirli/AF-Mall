@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { Sparkles, X, Send, Bot } from 'lucide-react'
-import { stores, events, vacancies } from '@/lib/mockData'
+import { useState, useRef, useEffect, useTransition } from 'react'
+import { Sparkles, X, Send, Bot, User, MapPin } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
+import { getAdvancedAIResponse } from '@/lib/actions/chat'
+import { motion, AnimatePresence } from 'framer-motion'
+import clsx from 'clsx'
 
 export function AIWidget() {
   const { lang } = useLanguage()
@@ -15,9 +17,15 @@ export function AIWidget() {
     { id: 1, text: t.greeting, sender: 'bot' }
   ])
   const [input, setInput] = useState('')
+  const [isPending, startTransition] = useTransition()
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Update greeting when language changes
+  const suggestions = {
+    AZ: ["Yemək yerləri", "Tədbirlər", "Vakansiyalar", "Mağazalar"],
+    EN: ["Find Food", "Upcoming Events", "Job Vacancies", "Stores"],
+    RU: ["Где поесть?", "Новые события", "Вакансии", "Магазины"]
+  }[lang] || ["Find Food", "Upcoming Events", "Job Vacancies", "Stores"];
+
   useEffect(() => {
     setMessages(prev => {
       const newMessages = [...prev]
@@ -32,146 +40,71 @@ export function AIWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const getAIResponse = (text: string, currentLang: string) => {
-    const lower = text.toLowerCase()
-    
-    // Responses dictionary
-    const responses = {
-      AZ: {
-        greeting: "Salam! Sizə necə kömək edə bilərəm?",
-        storeFound: (name: string, floor: string, zone: string) => `Bəli, bizdə ${name} var! Onu ${floor}-ci mərtəbədə, ${zone} zonasında tapa bilərsiniz.`,
-        food: "Əgər yemək və ya içki axtarırsınızsa, 1-ci mərtəbədə Starbucks və digər möhtəşəm kafelərimiz var.",
-        fashion: "Geyim və moda üçün Zara və Nike AF Mall-da çox populyar seçimlərdir.",
-        tech: "2-ci mərtəbədəki Apple Store-da ən son elektronika və smartfonları tapa bilərsiniz.",
-        events: (eventsStr: string) => `Qarşıdan gələn maraqlı tədbirlərimiz var: ${eventsStr}. Tarixlər və detallar üçün Tədbirlər səhifəsinə baxın!`,
-        jobsActive: (pos: string, store: string) => `Bəli, işçilər axtarırıq! Məsələn: ${store} mağazasında ${pos}. Müraciət etmək üçün Karyera səhifəmizə daxil olun.`,
-        jobsEmpty: "Ən son iş imkanları üçün Karyera səhifəmizi yoxlayın.",
-        leasing: "İcarəyə verilən mağaza və restoran sahələrimiz var! Zəhmət olmasa İcarə səhifəmizə daxil olun və ya leasing@af-mall.com ilə əlaqə saxlayın.",
-        fallback: "Bu maraqlı səslənir! Bütün mağaza və restoranları kəşf etmək üçün Kataloqumuza baxmağı tövsiyə edirəm. Başqa nə isə tapmaqda sizə kömək edə bilərəm?"
-      },
-      EN: {
-        greeting: "Hello! How can I help you today?",
-        storeFound: (name: string, floor: string, zone: string) => `Yes, we have ${name}! You can find it on Floor ${floor}, Zone ${zone}.`,
-        food: "If you're looking for food or drinks, we have Starbucks and other great cafes on the 1st floor.",
-        fashion: "For fashion and clothing, Zara and Nike are very popular choices here at AF Mall.",
-        tech: "The Apple Store on Floor 2 has the latest electronics and smartphones.",
-        events: (eventsStr: string) => `We have some exciting events coming up: ${eventsStr}. Check the Events page for dates and details!`,
-        jobsActive: (pos: string, store: string) => `Yes, we are hiring! For example: ${pos} at ${store}. Visit our Careers page to apply.`,
-        jobsEmpty: "Please check our Careers page for the latest job opportunities.",
-        leasing: "We have available retail and restaurant spaces for rent! Please visit our Leasing page or contact leasing@af-mall.com.",
-        fallback: "That sounds interesting! I recommend checking out our Directory to explore all stores and restaurants. Can I help you find anything else?"
-      },
-      RU: {
-        greeting: "Здравствуйте! Чем я могу вам помочь сегодня?",
-        storeFound: (name: string, floor: string, zone: string) => `Да, у нас есть ${name}! Вы можете найти его на ${floor} этаже, зона ${zone}.`,
-        food: "Если вы ищете еду или напитки, на 1 этаже есть Starbucks и другие отличные кафе.",
-        fashion: "Для моды и одежды Zara и Nike — очень популярные выборы в AF Mall.",
-        tech: "В Apple Store на 2 этаже представлены новейшие электронные устройства и смартфоны.",
-        events: (eventsStr: string) => `У нас намечаются интересные события: ${eventsStr}. Загляните на страницу Событий для дат и подробностей!`,
-        jobsActive: (pos: string, store: string) => `Да, мы нанимаем! Например: ${pos} в ${store}. Посетите нашу страницу Вакансий, чтобы подать заявку.`,
-        jobsEmpty: "Пожалуйста, проверьте нашу страницу Вакансий для поиска последних предложений о работе.",
-        leasing: "У нас есть свободные площади для магазинов и ресторанов! Пожалуйста, посетите страницу Аренды или свяжитесь с leasing@af-mall.com.",
-        fallback: "Звучит интересно! Я рекомендую заглянуть в наш Каталог, чтобы изучить все магазины и рестораны. Могу ли я помочь вам найти что-то еще?"
-      }
-    };
+  const sendText = (text: string) => {
+    if (!text.trim() || isPending) return
 
-    const res = responses[currentLang as keyof typeof responses] || responses.EN;
+    const userText = text.trim()
+    const history = messages.filter(m => m.id !== 1).map(m => ({
+      role: m.sender === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }]
+    }))
 
-    // Greetings
-    if (lower.includes('hi') || lower.includes('hello') || lower.includes('salam') || lower.includes('privet') || lower.includes('здравствуй') || lower.includes('привет') || lower.includes('hey')) {
-      return res.greeting
-    }
+    setMessages(prev => [
+      ...prev,
+      { id: Date.now(), text: userText, sender: 'user' }
+    ])
+    setInput('')
 
-    // Specific stores
-    const foundStore = stores.find(s => lower.includes(s.name.toLowerCase()))
-    if (foundStore) {
-      return res.storeFound(foundStore.name, foundStore.floor, foundStore.location || 'A');
-    }
-
-    // Categories
-    if (lower.includes('food') || lower.includes('eat') || lower.includes('restaurant') || lower.includes('coffee') || lower.includes('yemək') || lower.includes('kafe') || lower.includes('еда') || lower.includes('кофе') || lower.includes('ресторан')) {
-      return res.food;
-    }
-    if (lower.includes('clothes') || lower.includes('fashion') || lower.includes('wear') || lower.includes('shoes') || lower.includes('geyim') || lower.includes('paltar') || lower.includes('одежда') || lower.includes('обувь')) {
-      return res.fashion;
-    }
-    if (lower.includes('phone') || lower.includes('electronics') || lower.includes('apple') || lower.includes('telefon') || lower.includes('elektronika') || lower.includes('телефон')) {
-      return res.tech;
-    }
-
-    // Events
-    if (lower.includes('event') || lower.includes('show') || lower.includes('tədbir') || lower.includes('konsert') || lower.includes('событие') || lower.includes('шоу')) {
-      const upcoming = events.map(e => e.title).join(', ')
-      return res.events(upcoming);
-    }
-
-    // Vacancies
-    if (lower.includes('job') || lower.includes('career') || lower.includes('vacancy') || lower.includes('work') || lower.includes('iş') || lower.includes('vakansiya') || lower.includes('работа') || lower.includes('вакансия')) {
-      const activeJobs = vacancies.filter(v => v.status === 'Active')
-      if (activeJobs.length > 0) {
-        return res.jobsActive(activeJobs[0].position, activeJobs[0].storeName);
-      }
-      return res.jobsEmpty;
-    }
-
-    // Leasing
-    if (lower.includes('rent') || lower.includes('lease') || lower.includes('premise') || lower.includes('space') || lower.includes('icarə') || lower.includes('obyekt') || lower.includes('аренда') || lower.includes('помещение')) {
-      return res.leasing;
-    }
-
-    // Fallback
-    return res.fallback;
+    startTransition(async () => {
+      const result = await getAdvancedAIResponse(userText, lang, history)
+      setMessages(prev => [
+        ...prev,
+        { id: Date.now() + 1, text: result.text, sender: 'bot' }
+      ])
+    })
   }
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim()) return
-
-    const userText = input.trim()
-    const newMessages = [
-      ...messages,
-      { id: Date.now(), text: userText, sender: 'user' }
-    ]
-    setMessages(newMessages)
-    setInput('')
-
-    // Mock AI response
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        { 
-          id: Date.now() + 1, 
-          text: getAIResponse(userText, lang), 
-          sender: 'bot' 
-        }
-      ])
-    }, 800)
+    sendText(input)
   }
 
   return (
     <>
       {/* Floating Button */}
-      <button 
+      <motion.button 
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 p-4 rounded-full bg-linear-to-r from-red-600 to-orange-500 text-white shadow-2xl hover:scale-110 transition-transform duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        className={clsx(
+          "fixed bottom-6 right-6 z-50 p-4 rounded-full bg-linear-to-r from-red-600 to-orange-500 text-white shadow-2xl transition-all duration-500",
+          isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
+        )}
       >
         <Sparkles className="w-6 h-6 animate-pulse" />
-      </button>
+      </motion.button>
 
       {/* Chat Window */}
       <div 
-        className={`fixed bottom-6 right-6 z-50 w-[350px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transition-all duration-500 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
-        style={{ height: '500px' }}
+        className={clsx(
+          "fixed bottom-6 right-6 z-50 w-[380px] sm:w-[400px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transition-all duration-500 origin-bottom-right",
+          isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"
+        )}
+        style={{ height: '600px', maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="bg-linear-to-r from-slate-900 to-slate-800 p-4 text-white flex justify-between items-center shrink-0">
+        <div className="bg-linear-to-r from-slate-900 to-slate-800 p-4 text-white flex justify-between items-center shrink-0 shadow-md z-10 relative">
           <div className="flex items-center gap-3">
-            <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+            <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm relative">
               <Bot className="w-5 h-5 text-white" />
+              <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-slate-900 rounded-full"></div>
             </div>
             <div>
-              <h3 className="font-bold text-sm">AF Smart Concierge</h3>
-              <p className="text-xs text-slate-300">Powered by AI</p>
+              <h3 className="font-bold text-sm tracking-wide flex items-center gap-1">
+                AF Smart Concierge
+                <Sparkles className="w-3 h-3 text-orange-400" />
+              </h3>
+              <p className="text-xs text-slate-300 font-medium">Powered by AI</p>
             </div>
           </div>
           <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-2 rounded-full transition-colors">
@@ -180,34 +113,90 @@ export function AIWidget() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 flex flex-col">
-          {messages.map(msg => (
-            <div 
-              key={msg.id} 
-              className={`max-w-[80%] rounded-2xl p-3 text-sm shadow-sm ${
-                msg.sender === 'user' 
-                  ? 'bg-red-600 text-white self-end rounded-tr-sm' 
-                  : 'bg-white border border-slate-200 text-slate-700 self-start rounded-tl-sm'
-              }`}
+        <div className="flex-1 p-5 overflow-y-auto bg-slate-50 space-y-5 flex flex-col scroll-smooth">
+          <AnimatePresence initial={false}>
+            {messages.map((msg, idx) => (
+              <motion.div 
+                key={msg.id} 
+                initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className={clsx(
+                  "flex gap-3 max-w-[85%]",
+                  msg.sender === 'user' ? "self-end flex-row-reverse" : "self-start"
+                )}
+              >
+                {/* Avatar */}
+                <div className={clsx(
+                  "w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm",
+                  msg.sender === 'user' ? "bg-slate-200 text-slate-600" : "bg-red-600 text-white"
+                )}>
+                  {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                </div>
+
+                {/* Bubble */}
+                <div 
+                  className={clsx(
+                    "p-3.5 text-sm shadow-sm leading-relaxed",
+                    msg.sender === 'user' 
+                      ? 'bg-slate-900 text-white rounded-2xl rounded-tr-sm' 
+                      : 'bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm'
+                  )}
+                >
+                  {msg.text}
+                </div>
+              </motion.div>
+            ))}
+            
+            {/* Loading Indicator */}
+            {isPending && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex gap-3 self-start max-w-[85%]"
+              >
+                <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center shrink-0 shadow-sm text-white">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-sm shadow-sm flex items-center gap-1.5 h-[46px]">
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div ref={messagesEndRef} className="h-1" />
+        </div>
+
+        {/* Suggestions */}
+        <div className="px-4 py-3 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar shrink-0">
+          {suggestions.map((sug, i) => (
+            <button
+              key={i}
+              onClick={() => sendText(sug)}
+              disabled={isPending}
+              className="whitespace-nowrap px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded-full transition-colors disabled:opacity-50"
             >
-              {msg.text}
-            </div>
+              {sug}
+            </button>
           ))}
-          <div ref={messagesEndRef} />
         </div>
 
         {/* Input */}
-        <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-100 flex gap-2 shrink-0">
+        <form onSubmit={handleSend} className="p-4 pt-2 bg-white flex gap-2 shrink-0">
           <input 
             type="text" 
             placeholder={t.placeholder} 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+            disabled={isPending}
+            className="flex-1 bg-slate-50 border border-slate-200 rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-all disabled:opacity-50"
           />
           <button 
             type="submit" 
-            className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-colors flex shrink-0 items-center justify-center"
+            disabled={isPending || !input.trim()}
+            className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-colors flex shrink-0 items-center justify-center disabled:opacity-50 disabled:bg-slate-300 shadow-md"
           >
             <Send className="w-4 h-4" />
           </button>

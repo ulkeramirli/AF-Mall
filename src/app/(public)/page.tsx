@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingBag, MapIcon, Sparkles, Coffee, ArrowRight } from 'lucide-react'
+import { ShoppingBag, MapIcon, Sparkles, Coffee, ArrowRight, Wind, Sun, Cloud, CloudRain, Snowflake } from 'lucide-react'
 import { events, stores as allStores, categories } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { useWeather } from '@/hooks/useWeather'
+import { AutumnLeaves } from '@/components/ui/AutumnLeaves'
 import { motion } from 'framer-motion'
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
   const t = translation.home
   const nav = translation.nav
 
-  const { weather } = useWeather()
+  const { weather, temperature, windspeed, isWindy, isAutumn } = useWeather()
 
   const recentEvents = events.slice(0, 2)
   const featuredBrands = allStores.slice(0, 6).map(store => ({
@@ -23,9 +24,18 @@ export default function Home() {
     category: categories.find(c => c.id === store.categoryId)
   }))
 
+  const weatherLabels: Record<string, string> = {
+    sunny: t.weatherSunny || 'Günəşli',
+    cloudy: t.weatherCloudy || 'Buludlu',
+    rainy: t.weatherRainy || 'Yağışlı',
+    snowy: t.weatherSnowy || 'Qarlı',
+    windy: t.weatherWindy || 'Küləkli'
+  }
+
   const getGradient = () => {
     switch (weather) {
       case 'sunny': return 'from-blue-400 via-blue-200 to-slate-50';
+      case 'windy': return 'from-sky-300 via-amber-100/70 to-slate-50';
       case 'rainy': return 'from-slate-600 via-slate-400 to-slate-300';
       case 'snowy': return 'from-slate-300 via-slate-200 to-slate-100';
       case 'cloudy':
@@ -42,12 +52,19 @@ export default function Home() {
         {/* Full-Screen Parallax Clouds Background */}
         <div className={`absolute inset-0 z-0 overflow-hidden bg-linear-to-b ${getGradient()} transition-colors duration-1000`}>
           
-          {weather === 'sunny' && (
+          {(weather === 'sunny' || weather === 'windy') && (
             <div className="absolute top-10 right-20 w-48 h-48 bg-yellow-300 rounded-full blur-[60px] opacity-70 pointer-events-none"></div>
           )}
 
           {/* Cloud Layer 1 - Slow panning seamless clouds */}
-          <div className={`absolute top-0 left-0 w-[400%] h-[75%] flex animate-[slide_180s_linear_infinite] pointer-events-none transition-opacity duration-1000 ${weather === 'sunny' ? 'opacity-30' : 'opacity-60'}`} style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' }}>
+          <div 
+            className={`absolute top-0 left-0 w-[400%] h-[75%] flex animate-[slide_180s_linear_infinite] pointer-events-none transition-opacity duration-1000 ${weather === 'sunny' ? 'opacity-30' : weather === 'windy' ? 'opacity-45' : 'opacity-60'}`} 
+            style={{ 
+              WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', 
+              maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+              animationDuration: (weather === 'windy' || isWindy) ? '40s' : '180s'
+            }}
+          >
             {/* 4 identical blocks (Normal, Flipped, Normal, Flipped) for a perfect seamless loop */}
             <div className="w-1/4 h-full relative">
               <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center" priority />
@@ -62,6 +79,11 @@ export default function Home() {
               <Image src="/clouds.png" alt="clouds" fill className="object-cover object-center scale-x-[-1]" priority />
             </div>
           </div>
+
+          {/* Autumn Flying Leaves */}
+          {(isAutumn || weather === 'windy') && (weather === 'windy' || isWindy) && (
+            <AutumnLeaves windspeed={windspeed} />
+          )}
 
           {weather === 'rainy' && (
             <div className="absolute inset-0 pointer-events-none animate-rain opacity-70 z-10"></div>
@@ -84,13 +106,38 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.8 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-xs mb-6 lg:mb-8 uppercase tracking-widest shadow-sm"
+              className="inline-flex flex-wrap items-center gap-2 mb-6 lg:mb-8"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-              </span>
-              {t.bakuAzerbaijan}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-xs uppercase tracking-widest shadow-xs">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                </span>
+                {t.bakuAzerbaijan}
+              </div>
+
+              {temperature !== null && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 text-slate-700 font-semibold text-xs shadow-xs">
+                  {weather === 'windy' && <Wind className="w-3.5 h-3.5 text-amber-500 animate-pulse" />}
+                  {weather === 'sunny' && <Sun className="w-3.5 h-3.5 text-amber-500" />}
+                  {weather === 'cloudy' && <Cloud className="w-3.5 h-3.5 text-slate-400" />}
+                  {weather === 'rainy' && <CloudRain className="w-3.5 h-3.5 text-blue-500" />}
+                  {weather === 'snowy' && <Snowflake className="w-3.5 h-3.5 text-sky-400" />}
+                  <span>{Math.round(temperature)}°C</span>
+                  <span className="text-slate-300">•</span>
+                  <span>{weatherLabels[weather] || weather}</span>
+                  {windspeed !== null && (
+                    <span className="text-slate-500 font-normal">
+                      ({Math.round(windspeed)} km/h)
+                    </span>
+                  )}
+                  {isAutumn && (weather === 'windy' || isWindy) && (
+                    <span className="text-amber-600 ml-0.5" title="Autumn">
+                      🍂
+                    </span>
+                  )}
+                </div>
+              )}
             </motion.div>
             
             <motion.h1 

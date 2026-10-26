@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useTransition } from 'react'
-import { Sparkles, X, Send, Bot, User, MapPin } from 'lucide-react'
+import { Sparkles, X, Send, Bot, User } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { getAdvancedAIResponse } from '@/lib/actions/chat'
@@ -14,7 +14,7 @@ export function AIWidget() {
 
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { id: 1, text: t.greeting, sender: 'bot' }
+    { id: 1, text: '', sender: 'bot' }
   ])
   const [input, setInput] = useState('')
   const [isPending, startTransition] = useTransition()
@@ -25,16 +25,6 @@ export function AIWidget() {
     EN: ["Find Food", "Upcoming Events", "Job Vacancies", "Stores"],
     RU: ["Где поесть?", "Новые события", "Вакансии", "Магазины"]
   }[lang] || ["Find Food", "Upcoming Events", "Job Vacancies", "Stores"];
-
-  useEffect(() => {
-    setMessages(prev => {
-      const newMessages = [...prev]
-      if (newMessages.length > 0 && newMessages[0].id === 1) {
-        newMessages[0].text = t.greeting
-      }
-      return newMessages
-    })
-  }, [lang, t.greeting])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -87,7 +77,7 @@ export function AIWidget() {
       {/* Chat Window */}
       <div 
         className={clsx(
-          "fixed bottom-6 right-6 z-50 w-[380px] sm:w-[400px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transition-all duration-500 origin-bottom-right",
+          "fixed bottom-6 right-6 z-50 w-95 sm:w-100 bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transition-all duration-500 origin-bottom-right",
           isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"
         )}
         style={{ height: '600px', maxHeight: '90vh' }}
@@ -115,7 +105,7 @@ export function AIWidget() {
         {/* Messages */}
         <div className="flex-1 p-5 overflow-y-auto bg-slate-50 space-y-5 flex flex-col scroll-smooth">
           <AnimatePresence initial={false}>
-            {messages.map((msg, idx) => (
+            {messages.map((msg) => (
               <motion.div 
                 key={msg.id} 
                 initial={{ opacity: 0, y: 15, scale: 0.95 }}
@@ -143,7 +133,7 @@ export function AIWidget() {
                       : 'bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm'
                   )}
                 >
-                  {msg.text}
+                  {msg.id === 1 ? t.greeting : msg.text}
                 </div>
               </motion.div>
             ))}
@@ -158,7 +148,7 @@ export function AIWidget() {
                 <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center shrink-0 shadow-sm text-white">
                   <Bot className="w-4 h-4" />
                 </div>
-                <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-sm shadow-sm flex items-center gap-1.5 h-[46px]">
+                <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-sm shadow-sm flex items-center gap-1.5 h-11.5">
                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />

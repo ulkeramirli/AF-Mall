@@ -4,11 +4,11 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, Search, ChevronRight, ArrowRight } from 'lucide-react'
-import { stores as allStores, categories } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMallData } from '@/hooks/useMallData'
 
 function StoresContent() {
   const searchParams = useSearchParams()
@@ -17,6 +17,7 @@ function StoresContent() {
 
   const { lang } = useLanguage()
   const t = useTranslation(lang)
+  const { stores: allStores, categories } = useMallData()
 
   let filteredStores = allStores;
 
@@ -246,7 +247,7 @@ function StoresContent() {
                           {store.name}
                         </h3>
                         <p className="text-slate-500 text-xs md:text-sm line-clamp-3 mb-3 md:mb-4 leading-snug">
-                          {(t.storeDescriptions as Record<string, string>)?.[store.slug] || store.description || t.storeDetails.genericDesc.replace('{floor}', store.floor)}
+                          {(store.slug && (t.storeDescriptions as Record<string, string>)?.[store.slug]) || store.description || t.storeDetails.genericDesc.replace('{floor}', store.floor)}
                         </p>
                       </div>
 

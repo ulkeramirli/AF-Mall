@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ShoppingBag, MapIcon, Sparkles, Coffee, ArrowRight, Wind, Sun, Cloud, CloudRain, Snowflake } from 'lucide-react'
-import { events, stores as allStores, categories } from '@/lib/mockData'
+import { useMallData } from '@/hooks/useMallData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { useWeather } from '@/hooks/useWeather'
@@ -17,6 +17,7 @@ export default function Home() {
   const nav = translation.nav
 
   const { weather, temperature, windspeed, isWindy, isAutumn } = useWeather()
+  const { events, stores: allStores, categories } = useMallData()
 
   const recentEvents = events.slice(0, 2)
   const featuredBrands = allStores.slice(0, 6).map(store => ({

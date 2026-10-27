@@ -4,6 +4,7 @@ import { useActionState } from 'react'
 import { authenticate } from './actions'
 import { ShoppingBag, Lock, Mail, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function LoginPage() {
   const [errorMessage, formAction, isPending] = useActionState(
@@ -16,8 +17,14 @@ export default function LoginPage() {
       {/* Left Panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-16">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1600&q=80" alt="Mall" className="w-full h-full object-cover opacity-40 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/80 to-transparent" />
+          <Image 
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1600&q=80" 
+            alt="Mall" 
+            fill 
+            className="object-cover opacity-40 mix-blend-overlay" 
+            priority 
+          />
+          <div className="absolute inset-0 bg-linear-to-br from-slate-900 via-slate-900/80 to-transparent" />
         </div>
         
         <div className="relative z-10">
@@ -30,7 +37,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10">
-          <h1 className="text-5xl font-black text-white leading-tight mb-6 tracking-tight">Manage the <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Extraordinary</span></h1>
+          <h1 className="text-5xl font-black text-white leading-tight mb-6 tracking-tight">Manage the <br/><span className="text-transparent bg-clip-text bg-linear-to-r from-red-500 to-red-800">Extraordinary</span></h1>
           <p className="text-lg text-slate-300 max-w-md">Access the centralized administration portal to manage stores, categories, and events for AF Mall.</p>
         </div>
       </div>
@@ -68,7 +75,7 @@ export default function LoginPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide flex justify-between">
+                <label className="flex justify-between items-center text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
                   <span>Password</span>
                   <a href="#" className="text-red-700 hover:text-red-600 normal-case tracking-normal text-xs">Forgot?</a>
                 </label>
@@ -95,11 +102,26 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl shadow-xl shadow-red-600/20 text-base font-bold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl shadow-xl shadow-red-600/20 text-base font-bold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
             >
-              {isPending ? 'Signing in...' : 'Sign In to Dashboard'}
+              {isPending ? 'Daxil olunur / Signing in...' : 'Sign In to Dashboard'}
               {!isPending && <ArrowRight className="w-5 h-5" />}
             </button>
+
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-500 space-y-1">
+              <p className="font-bold text-slate-700">İlkin giriş məlumatları (Admin Login):</p>
+              <div className="flex justify-between items-center text-slate-600 font-mono">
+                <span>Email: <strong className="text-slate-900">admin@afmall.az</strong></span>
+                <span>Pass: <strong className="text-slate-900">password123</strong></span>
+              </div>
+              <p className="text-[11px] text-slate-400">Şifrəni Admin Settings bölməsindən istənilən vaxt dəyişə bilərsiniz.</p>
+            </div>
+
+            <div className="text-center pt-2">
+              <Link href="/" className="text-sm font-semibold text-slate-500 hover:text-red-600 transition-colors inline-flex items-center gap-1.5">
+                ← Əsas səhifəyə qayıt / Back to Main Mall
+              </Link>
+            </div>
           </form>
         </div>
       </div>

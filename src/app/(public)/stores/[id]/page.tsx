@@ -62,7 +62,7 @@ export default function StorePage({ params }: Props) {
                   <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                   <Link href="/stores" className="hover:text-white transition-colors">{t.stores.brands}</Link>
                   <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="text-red-400 truncate max-w-[120px] md:max-w-none">{store.name}</span>
+                  <span className="text-red-400 truncate max-w-30 md:max-w-none">{store.name}</span>
                 </div>
                 <h1 className="text-3xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-2">{store.name}</h1>
                 <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-3 py-1 md:px-4 md:py-1 rounded-full text-xs md:text-sm font-bold shadow-inner">

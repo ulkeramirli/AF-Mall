@@ -1,16 +1,18 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { useState } from 'react'
 import { Building, ArrowRight, MapPin, Maximize, Tag, Phone, Mail, Send, Check, Star, TrendingUp, ShieldCheck } from 'lucide-react'
-import { premises } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion } from 'framer-motion'
+import { useMallData } from '@/hooks/useMallData'
 
 export default function LeasingPage() {
   const { lang } = useLanguage()
   const t = useTranslation(lang).leasingPage
+  const { premises } = useMallData()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -62,7 +64,7 @@ export default function LeasingPage() {
         <div className="absolute inset-0 opacity-20">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-600 rounded-full blur-[128px]" />
           <div className="absolute top-20 -left-20 w-72 h-72 bg-blue-600 rounded-full blur-[128px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:32px_32px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-size-[32px_32px]" />
         </div>
 
         <div className="relative z-10 container mx-auto px-6 md:px-12 max-w-5xl text-center">
@@ -141,8 +143,8 @@ export default function LeasingPage() {
                     >
                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full sm:w-auto">
                           <div className="w-full sm:w-32 h-48 sm:h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0 relative">
-                             {(premise as any).images && (premise as any).images.length > 0 ? (
-                               <img src={(premise as any).images[0]} alt={`Unit ${premise.id}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                             {premise.images && premise.images.length > 0 ? (
+                               <Image src={premise.images[0]} alt={`Unit ${premise.id}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                              ) : (
                                <div className="w-full h-full flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 group-hover:text-red-600 group-hover:bg-red-50 transition-colors duration-300">
                                  <Building className="w-8 h-8" />

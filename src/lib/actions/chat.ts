@@ -1,7 +1,7 @@
 'use server';
 
 import { GoogleGenAI } from '@google/genai';
-import { stores, events, vacancies, categories } from '../mockData';
+import { getDb } from '../actions';
 
 // Initialize the Google Gen AI SDK conditionally to avoid crashes if credentials are completely missing
 let ai: GoogleGenAI | null = null;
@@ -12,8 +12,12 @@ try {
 }
 
 // Advanced Local Fallback Logic
-function getFallbackResponse(message: string, lang: string): string {
+function getFallbackResponse(message: string, lang: string, db: any): string {
   const lower = message.toLowerCase();
+  const stores = db.stores || [];
+  const categories = db.categories || [];
+  const events = db.events || [];
+  const vacancies = db.vacancies || [];
   
   // Dictionaries for professional responses
   const t = {
@@ -58,9 +62,9 @@ function getFallbackResponse(message: string, lang: string): string {
   if (/(hi|hello|salam|privet|здравствуй|привет|hey)/i.test(lower)) return res.greeting;
 
   // Store Match (Advanced Substring matching)
-  const foundStore = stores.find(s => lower.includes(s.name.toLowerCase()));
+  const foundStore = stores.find((s: any) => lower.includes(s.name?.toLowerCase()));
   if (foundStore) {
-    const cat = categories.find(c => c.id === foundStore.categoryId)?.name || 'retail';
+    const cat = categories.find((c: any) => c.id === foundStore.categoryId)?.name || 'retail';
     return res.storeFound(foundStore, cat);
   }
 
@@ -71,7 +75,7 @@ function getFallbackResponse(message: string, lang: string): string {
   if (/(event|show|tədbir|konsert|событие|шоу)/i.test(lower)) return res.events(events);
   
   if (/(job|career|vacancy|work|iş|vakansiya|работа|вакансия)/i.test(lower)) {
-    const activeJobs = vacancies.filter(v => v.status === 'Active');
+    const activeJobs = vacancies.filter((v: any) => v.status === 'Active');
     if (activeJobs.length > 0) return res.jobs(activeJobs);
   }
   
@@ -82,9 +86,15 @@ function getFallbackResponse(message: string, lang: string): string {
 
 export async function getAdvancedAIResponse(message: string, currentLang: string, messageHistory: { role: string, parts: { text: string }[] }[] = []) {
   try {
+    const db = await getDb();
+    const stores = db.stores || [];
+    const categories = db.categories || [];
+    const events = db.events || [];
+    const vacancies = db.vacancies || [];
+
     if (!ai || !process.env.GEMINI_API_KEY) {
       // Intentionally fallback silently if API key is not configured for a professional seamless experience
-      return { success: true, text: getFallbackResponse(message, currentLang) };
+      return { success: true, text: getFallbackResponse(message, currentLang, db) };
     }
 
     const systemInstruction = `You are the AF Smart Concierge, a highly professional, polite, and helpful AI digital assistant for AF Mall (a premium shopping center in Baku, Azerbaijan).
@@ -118,7 +128,11 @@ Rules:
     return { success: true, text: response.text || "I apologize, I couldn't process your request." };
   } catch (error: any) {
     console.error("AI Generation Error, falling back to local engine:", error);
-    // If the API call fails (e.g. invalid key, rate limit, network issue), fail gracefully and professionally.
-    return { success: true, text: getFallbackResponse(message, currentLang) };
+    try {
+      const db = await getDb();
+      return { success: true, text: getFallbackResponse(message, currentLang, db) };
+    } catch {
+      return { success: true, text: getFallbackResponse(message, currentLang, {}) };
+    }
   }
 }

@@ -1,18 +1,19 @@
 'use client'
 
 import { Briefcase, MapPin, Clock, ChevronRight, ArrowRight, Building2, Calendar, X, Check } from 'lucide-react'
-import { vacancies } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { useMallData } from '@/hooks/useMallData'
 
 export default function VacanciesPage() {
   const { lang } = useLanguage()
   const t = useTranslation(lang).vacanciesPage
   const tNav = useTranslation(lang).nav
+  const { vacancies } = useMallData()
 
   const activeVacancies = vacancies.filter(v => v.status === 'Active');
 

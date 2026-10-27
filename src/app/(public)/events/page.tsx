@@ -1,16 +1,17 @@
 'use client'
 
 import { Calendar, Tag, MapPin } from 'lucide-react'
-import { events } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { useMallData } from '@/hooks/useMallData'
 
 export default function EventsPage() {
   const { lang } = useLanguage()
   const translation = useTranslation(lang)
   const t = translation.home // Fixed: using home instead of hero
+  const { events } = useMallData()
 
   return (
     <div className="bg-slate-50 min-h-screen pb-32">

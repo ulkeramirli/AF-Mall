@@ -33,6 +33,42 @@ export interface Event {
   status?: 'Upcoming' | 'Ongoing' | 'Past';
 }
 
+export type LeasingInquiryStatus = 'New' | 'Contacted' | 'Under Review' | 'Approved' | 'Declined';
+
+export interface LeasingInquiry {
+  id: string;
+  premiseId?: string;
+  fullName: string;
+  companyOrBrand: string;
+  phone: string;
+  email: string;
+  activityType: string;
+  requiredArea?: string;
+  budget?: string;
+  notes?: string;
+  status: LeasingInquiryStatus;
+  adminNotes?: string;
+  createdAt: string;
+}
+
+export type JobApplicationStatus = 'New' | 'Reviewed' | 'Interview' | 'Offered' | 'Rejected';
+
+export interface JobApplication {
+  id: string;
+  vacancyId: string;
+  position: string;
+  storeName: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  cvLink?: string;
+  experience?: string;
+  message?: string;
+  status: JobApplicationStatus;
+  adminNotes?: string;
+  createdAt: string;
+}
+
 export interface Vacancy {
   id: string;
   storeName: string;
@@ -42,6 +78,12 @@ export interface Vacancy {
   postedDate: string;
   salary?: string;
   description?: string;
+  requirements?: string[];
+  responsibilities?: string[];
+  experienceLevel?: string;
+  department?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 }
 
 export interface Premise {
@@ -54,6 +96,8 @@ export interface Premise {
   price: string;
   images: string[];
   description?: string;
+  features?: string[];
+  locationInMall?: string;
 }
 
 export interface AdminUser {

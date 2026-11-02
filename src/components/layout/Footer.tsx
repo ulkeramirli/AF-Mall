@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { MapPin, Phone, Mail } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
+import { AfMallLogo } from '@/components/ui/AfMallLogo'
 
 export function Footer() {
   const { lang } = useLanguage()
@@ -15,16 +16,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Logo & Description */}
           <div className="lg:pr-8">
-            <div className="flex items-center gap-3 mb-6 group">
-              <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
-                <div className="absolute inset-0 bg-red-600 rotate-45 rounded-lg group-hover:rotate-90 transition-transform duration-500 ease-out shadow-lg shadow-red-600/30"></div>
-                <div className="absolute inset-0 border border-red-400/50 rotate-45 rounded-lg scale-110 group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                <span className="relative z-10 text-white font-black text-lg tracking-tighter">AF</span>
-              </div>
-              <div className="flex flex-col justify-center">
-                <span className="font-black text-xl leading-none tracking-tight uppercase text-white">MALL</span>
-              </div>
-            </div>
+            <Link href="/" className="inline-block mb-6 group">
+              <AfMallLogo
+                variant="light"
+                className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+              />
+            </Link>
             <p className="text-sm text-slate-400 mb-6 leading-relaxed">
               {t.desc}
             </p>

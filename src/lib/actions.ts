@@ -4,7 +4,19 @@ import fs from 'fs/promises'
 import path from 'path'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { Store, Category, Event as MallEvent, Vacancy, Premise, MallSettings, ActivityLog } from '@/types'
+import { 
+  Store, 
+  Category, 
+  Event as MallEvent, 
+  Vacancy, 
+  Premise, 
+  MallSettings, 
+  ActivityLog,
+  LeasingInquiry,
+  JobApplication,
+  LeasingInquiryStatus,
+  JobApplicationStatus
+} from '@/types'
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.json')
 
@@ -14,6 +26,8 @@ export interface DatabaseSchema {
   events: MallEvent[];
   vacancies: Vacancy[];
   premises: Premise[];
+  leasingInquiries: LeasingInquiry[];
+  jobApplications: JobApplication[];
   admin: {
     email: string;
     password?: string;
@@ -35,6 +49,8 @@ export async function getDb(): Promise<DatabaseSchema> {
       events: parsed.events || [],
       vacancies: parsed.vacancies || [],
       premises: parsed.premises || [],
+      leasingInquiries: parsed.leasingInquiries || [],
+      jobApplications: parsed.jobApplications || [],
       admin: parsed.admin || {
         email: 'admin@afmall.az',
         password: 'password123',
@@ -64,6 +80,8 @@ export async function getDb(): Promise<DatabaseSchema> {
       events: [],
       vacancies: [],
       premises: [],
+      leasingInquiries: [],
+      jobApplications: [],
       admin: {
         email: 'admin@afmall.az',
         password: 'password123',
@@ -277,17 +295,22 @@ export async function addPremise(formData: FormData) {
     'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800'
   ]
 
+  const featuresRaw = formData.get('features')?.toString() || ''
+  const features = featuresRaw ? featuresRaw.split(',').map(s => s.trim()).filter(Boolean) : []
+
   const customId = formData.get('id')?.toString().trim()
   const newPremise: Premise = {
     id: customId || ('P' + Math.floor(100 + Math.random() * 900)),
     floor: formData.get('floor')?.toString() || '1',
-    area: formData.get('area')?.toString() || '100 sqm',
+    area: formData.get('area')?.toString() || '100 m²',
     type: formData.get('type')?.toString() || 'Retail',
     status: (formData.get('status')?.toString() as any) || 'Available',
     tenant: formData.get('tenant')?.toString().trim() || null,
-    price: formData.get('price')?.toString() || '$3,000/mo',
+    price: formData.get('price')?.toString() || '$3,000/ay',
     images,
-    description: formData.get('description')?.toString() || ''
+    description: formData.get('description')?.toString() || '',
+    features: features.length > 0 ? features : undefined,
+    locationInMall: formData.get('locationInMall')?.toString().trim() || undefined
   }
 
   db.premises.push(newPremise)
@@ -311,6 +334,9 @@ export async function updatePremise(formData: FormData) {
   const imagesRaw = formData.get('images')?.toString()
   const images = imagesRaw ? imagesRaw.split(',').map(s => s.trim()).filter(Boolean) : db.premises[index].images
 
+  const featuresRaw = formData.get('features')?.toString()
+  const features = featuresRaw ? featuresRaw.split(',').map(s => s.trim()).filter(Boolean) : db.premises[index].features
+
   db.premises[index] = {
     ...db.premises[index],
     floor: formData.get('floor')?.toString() || db.premises[index].floor,
@@ -320,7 +346,9 @@ export async function updatePremise(formData: FormData) {
     tenant: formData.get('tenant')?.toString().trim() || null,
     price: formData.get('price')?.toString() || db.premises[index].price,
     images: images && images.length > 0 ? images : db.premises[index].images,
-    description: formData.get('description')?.toString() || db.premises[index].description
+    description: formData.get('description')?.toString() || db.premises[index].description,
+    features: features,
+    locationInMall: formData.get('locationInMall')?.toString().trim() || db.premises[index].locationInMall
   }
 
   await saveDb(db)
@@ -346,6 +374,91 @@ export async function deletePremise(id: string) {
 }
 
 /* =========================================================================
+   LEASING INQUIRIES (CLIENT -> ADMIN COMMUNICATION)
+========================================================================= */
+
+export async function submitLeasingInquiry(formData: FormData) {
+  const db = await getDb()
+
+  const fullName = formData.get('fullName')?.toString().trim() || ''
+  const companyOrBrand = formData.get('companyOrBrand')?.toString().trim() || 'Fərdi müraciət'
+  const phone = formData.get('phone')?.toString().trim() || ''
+  const email = formData.get('email')?.toString().trim() || ''
+  const premiseId = formData.get('premiseId')?.toString().trim() || undefined
+  const activityType = formData.get('activityType')?.toString().trim() || 'Retail'
+  const requiredArea = formData.get('requiredArea')?.toString().trim() || undefined
+  const budget = formData.get('budget')?.toString().trim() || undefined
+  const notes = formData.get('notes')?.toString().trim() || ''
+
+  if (!fullName || !phone) {
+    throw new Error('Ad və telefon nömrəsi mütləq qeyd olunmalıdır.')
+  }
+
+  const newInquiry: LeasingInquiry = {
+    id: 'inq-' + Date.now(),
+    premiseId,
+    fullName,
+    companyOrBrand,
+    phone,
+    email,
+    activityType,
+    requiredArea,
+    budget,
+    notes,
+    status: 'New',
+    createdAt: new Date().toISOString()
+  }
+
+  db.leasingInquiries = [newInquiry, ...(db.leasingInquiries || [])]
+  await saveDb(db)
+
+  await logActivity(
+    'Yeni İcarə Sorğusu',
+    `"${companyOrBrand}" (${fullName}) tərəfindən ${premiseId ? `obyekt ${premiseId} üçün` : 'icarə sahəsi üçün'} yeni sorğu daxil oldu. Tel: ${phone}`
+  )
+
+  revalidatePath('/leasing')
+  revalidatePath('/admin')
+  revalidatePath('/admin/premises')
+  revalidatePath('/admin/leasing-inquiries')
+  return { success: true, inquiry: newInquiry }
+}
+
+export async function updateLeasingInquiryStatus(id: string, status: LeasingInquiryStatus, adminNotes?: string) {
+  const db = await getDb()
+  const index = (db.leasingInquiries || []).findIndex(i => i.id === id)
+  if (index === -1) throw new Error('Sorğu tapılmadı')
+
+  db.leasingInquiries[index].status = status
+  if (adminNotes !== undefined) {
+    db.leasingInquiries[index].adminNotes = adminNotes
+  }
+
+  await saveDb(db)
+  await logActivity(
+    'İcarə Sorğusu Yeniləndi',
+    `Sorğu ${id} statusu "${status}" olaraq dəyişdirildi`
+  )
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/premises')
+  revalidatePath('/admin/leasing-inquiries')
+  return { success: true }
+}
+
+export async function deleteLeasingInquiry(id: string) {
+  const db = await getDb()
+  db.leasingInquiries = (db.leasingInquiries || []).filter(i => i.id !== id)
+  await saveDb(db)
+  await logActivity('İcarə Sorğusu Silindi', `İcarə sorğusu ${id} silindi`)
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/premises')
+  revalidatePath('/admin/leasing-inquiries')
+  return { success: true }
+}
+
+/* =========================================================================
    VACANCIES MANAGEMENT
 ========================================================================= */
 
@@ -353,6 +466,12 @@ export async function addVacancy(formData: FormData) {
   const db = await getDb()
   const position = formData.get('position')?.toString().trim() || 'Staff'
   const storeName = formData.get('storeName')?.toString().trim() || 'AF Mall'
+
+  const reqRaw = formData.get('requirements')?.toString() || ''
+  const requirements = reqRaw ? reqRaw.split('\n').map(s => s.trim()).filter(Boolean) : []
+
+  const respRaw = formData.get('responsibilities')?.toString() || ''
+  const responsibilities = respRaw ? respRaw.split('\n').map(s => s.trim()).filter(Boolean) : []
 
   const newVacancy: Vacancy = {
     id: Date.now().toString(),
@@ -362,7 +481,11 @@ export async function addVacancy(formData: FormData) {
     status: (formData.get('status')?.toString() as any) || 'Active',
     postedDate: new Date().toISOString().split('T')[0],
     salary: formData.get('salary')?.toString() || undefined,
-    description: formData.get('description')?.toString() || ''
+    department: formData.get('department')?.toString() || undefined,
+    experienceLevel: formData.get('experienceLevel')?.toString() || undefined,
+    description: formData.get('description')?.toString() || '',
+    requirements: requirements.length > 0 ? requirements : undefined,
+    responsibilities: responsibilities.length > 0 ? responsibilities : undefined
   }
 
   db.vacancies.push(newVacancy)
@@ -383,6 +506,16 @@ export async function updateVacancy(formData: FormData) {
   const index = db.vacancies.findIndex(v => v.id === id)
   if (index === -1) throw new Error('Vacancy not found')
 
+  const reqRaw = formData.get('requirements')?.toString()
+  const requirements = reqRaw !== undefined 
+    ? reqRaw.split('\n').map(s => s.trim()).filter(Boolean) 
+    : db.vacancies[index].requirements
+
+  const respRaw = formData.get('responsibilities')?.toString()
+  const responsibilities = respRaw !== undefined 
+    ? respRaw.split('\n').map(s => s.trim()).filter(Boolean) 
+    : db.vacancies[index].responsibilities
+
   db.vacancies[index] = {
     ...db.vacancies[index],
     storeName: formData.get('storeName')?.toString().trim() || db.vacancies[index].storeName,
@@ -390,7 +523,11 @@ export async function updateVacancy(formData: FormData) {
     type: formData.get('type')?.toString() || db.vacancies[index].type,
     status: (formData.get('status')?.toString() as any) || db.vacancies[index].status,
     salary: formData.get('salary')?.toString() || db.vacancies[index].salary,
-    description: formData.get('description')?.toString() || db.vacancies[index].description
+    department: formData.get('department')?.toString() || db.vacancies[index].department,
+    experienceLevel: formData.get('experienceLevel')?.toString() || db.vacancies[index].experienceLevel,
+    description: formData.get('description')?.toString() || db.vacancies[index].description,
+    requirements,
+    responsibilities
   }
 
   await saveDb(db)
@@ -412,6 +549,91 @@ export async function deleteVacancy(id: string) {
   revalidatePath('/vacancies')
   revalidatePath('/admin')
   revalidatePath('/admin/vacancies')
+  return { success: true }
+}
+
+/* =========================================================================
+   JOB APPLICATIONS (CANDIDATE -> HR / ADMIN COMMUNICATION)
+========================================================================= */
+
+export async function submitJobApplication(formData: FormData) {
+  const db = await getDb()
+
+  const vacancyId = formData.get('vacancyId')?.toString().trim() || 'general'
+  const position = formData.get('position')?.toString().trim() || 'Ümumi Müraciət'
+  const storeName = formData.get('storeName')?.toString().trim() || 'AF Mall'
+  const fullName = formData.get('fullName')?.toString().trim() || ''
+  const phone = formData.get('phone')?.toString().trim() || ''
+  const email = formData.get('email')?.toString().trim() || ''
+  const cvLink = formData.get('cvLink')?.toString().trim() || undefined
+  const experience = formData.get('experience')?.toString().trim() || undefined
+  const message = formData.get('message')?.toString().trim() || undefined
+
+  if (!fullName || !phone) {
+    throw new Error('Ad və əlaqə nömrəsi mütləq daxil edilməlidir.')
+  }
+
+  const newApp: JobApplication = {
+    id: 'app-' + Date.now(),
+    vacancyId,
+    position,
+    storeName,
+    fullName,
+    phone,
+    email,
+    cvLink,
+    experience,
+    message,
+    status: 'New',
+    createdAt: new Date().toISOString()
+  }
+
+  db.jobApplications = [newApp, ...(db.jobApplications || [])]
+  await saveDb(db)
+
+  await logActivity(
+    'Yeni CV / İş Müraciəti',
+    `"${fullName}" tərəfindən "${position}" (${storeName}) vəzifəsinə müraciət daxil oldu. Tel: ${phone}`
+  )
+
+  revalidatePath('/vacancies')
+  revalidatePath('/admin')
+  revalidatePath('/admin/vacancies')
+  revalidatePath('/admin/job-applications')
+  return { success: true, application: newApp }
+}
+
+export async function updateJobApplicationStatus(id: string, status: JobApplicationStatus, adminNotes?: string) {
+  const db = await getDb()
+  const index = (db.jobApplications || []).findIndex(a => a.id === id)
+  if (index === -1) throw new Error('Müraciət tapılmadı')
+
+  db.jobApplications[index].status = status
+  if (adminNotes !== undefined) {
+    db.jobApplications[index].adminNotes = adminNotes
+  }
+
+  await saveDb(db)
+  await logActivity(
+    'CV Statusu Yeniləndi',
+    `Namizəd ${db.jobApplications[index].fullName} statusu "${status}" edildi`
+  )
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/vacancies')
+  revalidatePath('/admin/job-applications')
+  return { success: true }
+}
+
+export async function deleteJobApplication(id: string) {
+  const db = await getDb()
+  db.jobApplications = (db.jobApplications || []).filter(a => a.id !== id)
+  await saveDb(db)
+  await logActivity('İş Müraciəti Silindi', `Müraciət ${id} silindi`)
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/vacancies')
+  revalidatePath('/admin/job-applications')
   return { success: true }
 }
 

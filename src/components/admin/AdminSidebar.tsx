@@ -13,17 +13,22 @@ import {
   Settings, 
   ExternalLink,
   ShieldCheck,
-  X
+  X,
+  Mail,
+  Users
 } from 'lucide-react'
 import { handleLogout } from '@/app/login/actions'
 import { AdminUser } from '@/types'
+import { AfMallLogo } from '@/components/ui/AfMallLogo'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/stores', label: 'Stores & Brands', icon: Store },
   { href: '/admin/categories', label: 'Categories', icon: Tag },
   { href: '/admin/premises', label: 'Premises & Leasing', icon: Building },
+  { href: '/admin/leasing-inquiries', label: 'İcarə Sorğuları', icon: Mail },
   { href: '/admin/vacancies', label: 'Vacancies / Jobs', icon: Briefcase },
+  { href: '/admin/job-applications', label: 'İş Müraciətləri', icon: Users },
   { href: '/admin/events', label: 'Events & News', icon: Calendar },
   { href: '/admin/settings', label: 'Mall Settings', icon: Settings },
 ]
@@ -55,14 +60,12 @@ export function AdminSidebar({
         ${mobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
       `}>
         {/* Brand Header */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800/80 bg-[#070a12]">
+        <div className="h-20 flex items-center justify-between px-5 border-b border-slate-800/80 bg-[#070a12]">
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center font-black text-white shadow-lg shadow-red-600/30 text-lg tracking-wider">
-              AF
-            </div>
+            <AfMallLogo variant="light" className="h-10 w-auto shrink-0" />
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-white font-extrabold text-lg tracking-tight">AF Mall</span>
+                <span className="text-white font-extrabold text-sm tracking-tight">AF Mall</span>
                 <span className="bg-red-500/20 text-red-400 text-[10px] font-black uppercase px-1.5 py-0.5 rounded-md border border-red-500/30">Admin</span>
               </div>
               <p className="text-[11px] text-slate-400 font-medium">Control Center</p>

@@ -110,80 +110,278 @@
     {
       "id": "1",
       "storeName": "Zara",
-      "position": "Sales Assistant",
+      "position": "Satış Məsləhətçisi (Sales Assistant)",
       "type": "Full-time",
       "status": "Active",
-      "postedDate": "2026-09-01"
+      "postedDate": "2026-10-15",
+      "salary": "750 - 950 AZN + Bonus",
+      "department": "Moda & Pərakəndə Satış",
+      "experienceLevel": "1-3 il təcrübə",
+      "description": "Zara AF Mall filialı üçün enerjili, müştəriyönümlü və dəb trendlərini yaxından izləyən satış məsləhətçiləri axtarılır.",
+      "responsibilities": [
+        "Müştəriləri gülərüz qarşılamaq və onlara peşəkar stil məsləhətləri vermək",
+        "Mağaza daxilində malların səliqəli yerləşdirilməsini və vizual standartları qorumaq",
+        "Kassa əməliyyatlarını və məhsul qəbulu prosesini təlimatlara uyğun icra etmək"
+      ],
+      "requirements": [
+        "Azərbaycan və rus dillərində səlis danışıq qabiliyyəti (ingilis dili üstünlükdür)",
+        "Satış və müştəri xidməti sahəsində minimum 1 il iş təcrübəsi",
+        "Komandada işləmək bacarığı, məsuliyyətlilik və ünsiyyətcillik"
+      ]
     },
     {
       "id": "2",
       "storeName": "AF Mall Management",
-      "position": "Security Guard",
+      "position": "Mühafizə Əməkdaşı (Security Officer)",
       "type": "Shift",
       "status": "Active",
-      "postedDate": "2026-09-05"
+      "postedDate": "2026-10-20",
+      "salary": "700 - 850 AZN",
+      "department": "Təhlükəsizlik & Əməliyyat",
+      "experienceLevel": "1+ il və ya Hərbi xidmət",
+      "description": "AF Mall ticarət mərkəzinin 24/7 təhlükəsizlik və nizam-intizamının təmin olunması üçün mühafizə əməkdaşları tələb olunur.",
+      "responsibilities": [
+        "Ticarət mərkəzinin giriş-çıxış və ümumi zonalarında ictimai asayişi qorumaq",
+        "Kamera və videomüşahidə sistemlərinin nəzarətində iştirak etmək",
+        "Ziyarətçilərə zəruri hallarda yönləndirmə və köməklik göstərmək"
+      ],
+      "requirements": [
+        "Həqiqi hərbi xidmət keçmiş olmaq",
+        "Fiziki cəhətdən sağlam, diqqətli və intizamlı olmaq",
+        "Oxşar və ya mühafizə sahəsində iş təcrübəsi arzuolunandır"
+      ]
     },
     {
       "id": "3",
+      "storeName": "AF Mall Management",
+      "position": "Müştəri Xidmətləri & Receptsiya Meneceri",
+      "type": "Full-time",
+      "status": "Active",
+      "postedDate": "2026-10-22",
+      "salary": "900 - 1,200 AZN",
+      "department": "Qonaq Xidmətləri (Guest Relations)",
+      "experienceLevel": "2+ il təcrübə",
+      "description": "Mall ziyarətçilərinin məlumatlandırılması, rəy və təkliflərin qəbulu, V.I.P qonaqların qarşılanması üzrə menecer vəzifəsi.",
+      "responsibilities": [
+        "Məlumat masasında ziyarətçilərin suallarını operativ cavablandırmaq",
+        "Mall aksiyaları və loyallıq proqramları haqqında məlumat vermək",
+        "Rəy və sorğuları qeydiyyata alaraq rəhbərliyə təqdim etmək"
+      ],
+      "requirements": [
+        "Ali təhsil, yüksək nitq mədəniyyəti",
+        "Azərbaycan, rus və ingilis dillərini mükəmməl bilmək",
+        "Müştəri məmnuniyyəti sahəsində ən azı 2 il təcrübə"
+      ]
+    },
+    {
+      "id": "4",
       "storeName": "Apple Store",
-      "position": "Genius Bar Technician",
+      "position": "Genius Bar Texniki Mütəxəssis",
       "type": "Full-time",
       "status": "Closed",
-      "postedDate": "2026-08-20"
+      "postedDate": "2026-08-20",
+      "salary": "1,200 - 1,600 AZN",
+      "department": "Texniki Dəstək",
+      "experienceLevel": "2+ il Apple cihazları",
+      "description": "Apple cihazlarının diaqnostikası və servis dəstəyi.",
+      "responsibilities": [
+        "Müştəri cihazlarının texniki yoxlanışı və nasazlıqların aradan qaldırılması"
+      ],
+      "requirements": [
+        "Apple sertifikatları və ya təmir təcrübəsi"
+      ]
     }
   ],
   "premises": [
     {
       "id": "P101",
       "floor": "1",
-      "area": "120 sqm",
-      "type": "Retail",
+      "area": "120 m²",
+      "type": "Retail (Pərakəndə)",
       "status": "Rented",
       "tenant": "Zara",
-      "price": "$5,000/mo",
+      "price": "$5,000/ay",
       "images": [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1572025442646-866d16c84a54?auto=format&fit=crop&q=80&w=800"
-      ]
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "1-ci mərtəbənin əsas girişində, yüksək insan axını olan premium ticarət sahəsi.",
+      "features": [
+        "Geniş şüşə vitrin fasadı (12 metr)",
+        "Mərkəzi havalandırma və VRV kondisioner",
+        "Ayrıca anbar və personal otağı",
+        "Yüksək sürətli optik internet"
+      ],
+      "locationInMall": "1-ci Mərtəbə, Mərkəzi Atrium yanı"
     },
     {
       "id": "P102",
       "floor": "1",
-      "area": "80 sqm",
-      "type": "Retail",
+      "area": "85 m²",
+      "type": "Retail (Butik / Kosmetika / Aksesuar)",
       "status": "Available",
       "tenant": null,
-      "price": "$3,500/mo",
+      "price": "$3,500/ay",
       "images": [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1572025442646-866d16c84a54?auto=format&fit=crop&q=80&w=800"
-      ]
+        "https://images.unsplash.com/photo-1555529771-835f59fc5efe?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1572025442646-866d16c84a54?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "Premium brendlər, qızıl-zinət, saat və ya parfümeriya butiki üçün ideal yerləşmə.",
+      "features": [
+        "Panoramik işıqlı vitrin xətti",
+        "Su və kanalizasiya qovşağı hazır",
+        "Tavan hündürlüyü: 4.2 metr",
+        "Mərkəzi yanğınsöndürmə və siqnalizasiya",
+        "24/7 mühafizə və müşahidə"
+      ],
+      "locationInMall": "1-ci Mərtəbə, Əsas Giriş Zalı (Səməd Vurğun istiqaməti)"
     },
     {
       "id": "P201",
       "floor": "2",
-      "area": "200 sqm",
-      "type": "Restaurant",
+      "area": "220 m²",
+      "type": "Restaurant (Restoran / Kafe)",
       "status": "Available",
       "tenant": null,
-      "price": "$8,000/mo",
+      "price": "$7,800/ay",
       "images": [
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800"
-      ]
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "Restoran və ya müasir lounge-kafe konseptləri üçün tam texniki infrastrukturla təchiz olunmuş geniş sahə.",
+      "features": [
+        "Xüsusi sənaye tipli havalandırma və tüstü bacası",
+        "3-fazalı gücləndirilmiş elektrik (80 kVt)",
+        "Mətbəx üçün yağtutan və sanitar qovşaqlar",
+        "Açıq atrium mənzərəli terras zonası"
+      ],
+      "locationInMall": "2-ci Mərtəbə, Food Court & Dining Qanadı"
+    },
+    {
+      "id": "P204",
+      "floor": "2",
+      "area": "45 m²",
+      "type": "Kiosk / Ada (Island Stand)",
+      "status": "Available",
+      "tenant": null,
+      "price": "$2,200/ay",
+      "images": [
+        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "Qəhvə köşkü, şirniyyat, təbii şirələr və ya aksesuarlar üçün yüksək görünüşlü ada sahəsi.",
+      "features": [
+        "360 dərəcə əhatəli görünüş",
+        "Eskalatorun düz qarşısında",
+        "Elektrik və su xətti döşəməaltı qoşulub",
+        "Mall-un ən aktiv hərəkət nöqtəsində"
+      ],
+      "locationInMall": "2-ci Mərtəbə, Eskalator Meydançası"
     },
     {
       "id": "P305",
       "floor": "3",
-      "area": "60 sqm",
-      "type": "Kiosk",
+      "area": "60 m²",
+      "type": "Təhsil / Ofis",
       "status": "Rented",
       "tenant": "Language Courses",
-      "price": "$2,000/mo",
+      "price": "$2,000/ay",
       "images": [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1572025442646-866d16c84a54?auto=format&fit=crop&q=80&w=800"
-      ]
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "Tədris mərkəzi və ya yaradıcı studiya üçün rahat sahə.",
+      "features": [
+        "Səs izolyasiyalı otaqlar",
+        "Sürətli Wi-Fi şəbəkəsi"
+      ],
+      "locationInMall": "3-cü Mərtəbə, Şərq Qanadı"
+    },
+    {
+      "id": "P302",
+      "floor": "3",
+      "area": "110 m²",
+      "type": "Pilates / Gözəllik / Studio",
+      "status": "Available",
+      "tenant": null,
+      "price": "$3,200/ay",
+      "images": [
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=1200",
+        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1200"
+      ],
+      "description": "Gözəllik salonu, estetik klinika, pilates və ya yoqa studiyası üçün tam uyğunlaşdırılmış məkan.",
+      "features": [
+        "Duş və soyunub-geyinmə zonası üçün sanitar xətlər",
+        "Təbii gün işığı alan vitraj pəncərələr",
+        "Sakit və komfortlu atmosfer",
+        "Liftə yaxın yerləşmə"
+      ],
+      "locationInMall": "3-cü Mərtəbə, Wellness & Lifestyle Zonası"
+    }
+  ],
+  "leasingInquiries": [
+    {
+      "id": "inq-1793101",
+      "premiseId": "P102",
+      "fullName": "Nihad Məmmədov",
+      "companyOrBrand": "Boutique Fragrance Baku",
+      "phone": "+994 50 234 56 78",
+      "email": "nihad@fragrance.az",
+      "activityType": "Retail (Parfümeriya)",
+      "requiredArea": "85 m²",
+      "budget": "$3,000 - $3,500/ay",
+      "notes": "Fransa və İtaliya istehsalı niş ətirlərin rəsmi distribyutoruyuq. Obyekt P102 ilə yaxından tanış olmaq üçün görüş təyin etmək istərdik.",
+      "status": "New",
+      "adminNotes": "Müştəri ilə əlaqə saxlanılmalıdır, premium brenddir.",
+      "createdAt": "2026-10-28T10:30:00Z"
+    },
+    {
+      "id": "inq-1793102",
+      "premiseId": "P204",
+      "fullName": "Aysel Quliyeva",
+      "companyOrBrand": "Specialty Coffee Hub",
+      "phone": "+994 55 987 65 43",
+      "email": "aysel@coffeehub.az",
+      "activityType": "Restaurant / Cafe (Kofe Ada)",
+      "requiredArea": "40-50 m²",
+      "budget": "$2,000 - $2,500/ay",
+      "notes": "2-ci mərtəbədə ada tipli qəhvə köşkü açmaq istəyirik. Hazır biznes layihəmiz və vizual layihəmiz var.",
+      "status": "Contacted",
+      "adminNotes": "Telefonda ilkin məlumat verildi, layihə təqdimatı göndərəcəklər.",
+      "createdAt": "2026-10-27T14:15:00Z"
+    }
+  ],
+  "jobApplications": [
+    {
+      "id": "app-1793201",
+      "vacancyId": "1",
+      "position": "Satış Məsləhətçisi (Sales Assistant)",
+      "storeName": "Zara",
+      "fullName": "Leyla Hüseynova",
+      "phone": "+994 70 854 21 00",
+      "email": "leyla.huseyn@yahoo.com",
+      "experience": "2 il 'Mango' mağazasında aparıcı satış məsləhətçisi",
+      "cvLink": "https://linkedin.com/in/leyla-huseynova-demo",
+      "message": "Zara brendini çox sevirəm, müştərilərlə ünsiyyətdə yüksək təcrübəm var. Komandanıza dəyər qatacağıma inanıram.",
+      "status": "Interview",
+      "adminNotes": "Müsahibə təyin olundu: 30 Oktyabr saat 15:00",
+      "createdAt": "2026-10-27T11:00:00Z"
+    },
+    {
+      "id": "app-1793202",
+      "vacancyId": "2",
+      "position": "Mühafizə Əməkdaşı (Security Officer)",
+      "storeName": "AF Mall Management",
+      "fullName": "Rəşad Əliyev",
+      "phone": "+994 50 712 34 56",
+      "email": "rashad.aliyev@gmail.com",
+      "experience": "4 il böyük ticarət mərkəzində növbə rəisi və mühafizəçi",
+      "cvLink": "https://drive.google.com/file/d/demo-cv-rashad",
+      "message": "Hərbi xidməti fərqlənmə ilə bitirmişəm, sertifikatlı mühafizəçiyəm.",
+      "status": "New",
+      "adminNotes": "Sənədləri qaydasındadır, görüşə dəvət edilə bilər.",
+      "createdAt": "2026-10-28T16:20:00Z"
     }
   ],
   "admin": {
@@ -207,6 +405,13 @@
     }
   },
   "activityLogs": [
+    {
+      "id": "act-1793102018323",
+      "action": "Admin Login",
+      "description": "Admin signed into dashboard (admin@afmall.az)",
+      "user": "Admin Director",
+      "timestamp": "2026-10-27T11:53:38.323Z"
+    },
     {
       "id": "act-1793022183494",
       "action": "Admin Login",

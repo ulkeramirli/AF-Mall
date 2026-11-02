@@ -1,23 +1,26 @@
 'use client'
 
-import { use } from 'react'
+import { use, useState } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, MapPin, Maximize, Tag, Building, Phone, Mail, Check, Send } from 'lucide-react'
-import { premises } from '@/lib/mockData'
+import { ArrowLeft, MapPin, Maximize, Tag, Building, Phone, Mail, Check, Send, CheckCircle2 } from 'lucide-react'
+import { premises as fallbackPremises } from '@/lib/mockData'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useMallData } from '@/hooks/useMallData'
+import { submitLeasingInquiry } from '@/lib/actions'
 
 export default function PremiseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params)
+  const { premises: livePremises } = useMallData()
+  const premises = livePremises && livePremises.length > 0 ? livePremises : fallbackPremises
   const premise = premises.find(p => p.id === resolvedParams.id)
   
   const { lang } = useLanguage()
   const t = useTranslation(lang).leasingPage
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   if (!premise) {
     return notFound()
@@ -30,24 +33,33 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
     available: isAz ? 'Mövcuddur' : isRu ? 'Доступно' : 'Available',
     callUs: isAz ? 'Bizə zəng edin' : isRu ? 'Позвоните нам' : 'Call us',
     emailUs: isAz ? 'Bizə yazın' : isRu ? 'Напишите нам' : 'Email us',
-    name: isAz ? 'Adınız' : isRu ? 'Ваше имя' : 'Your Name',
-    phoneLabel: isAz ? 'Telefon' : isRu ? 'Телефон' : 'Phone',
-    sent: isAz ? 'Göndərildi' : isRu ? 'Отправлено' : 'Sent',
+    name: isAz ? 'Adınız və Soyadınız' : isRu ? 'Ваше имя' : 'Your Name',
+    phoneLabel: isAz ? 'Telefon nömrəsi' : isRu ? 'Телефон' : 'Phone',
+    companyLabel: isAz ? 'Şirkət / Brend adı' : isRu ? 'Компания / Бренд' : 'Company / Brand',
+    messageLabel: isAz ? 'Əlavə qeydlər (istəyə görə)' : isRu ? 'Дополнительные пожелания' : 'Additional notes',
+    sent: isAz ? 'Sorğu Göndərildi!' : isRu ? 'Запрос отправлен!' : 'Inquiry Sent!',
     unit: isAz ? 'Obyekt' : isRu ? 'Объект' : 'Unit',
     back: isAz ? 'Geri qayıt' : isRu ? 'Назад' : 'Back to list',
     details: isAz ? 'Məlumat' : isRu ? 'Детали' : 'Details',
     gallery: isAz ? 'Qalereya' : isRu ? 'Галерея' : 'Gallery',
-    requestInfo: isAz ? 'Məlumat Sorğusu' : isRu ? 'Запросить информацию' : 'Request Info',
+    requestInfo: isAz ? 'İcarə Müraciəti Göndər' : isRu ? 'Отправить заявку на аренду' : 'Request Leasing Info',
   }
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setError(null)
+
+    try {
+      const formData = new FormData(e.currentTarget)
+      formData.set('premiseId', premise.id)
+      await submitLeasingInquiry(formData)
       setSubmitted(true)
-      setTimeout(() => setSubmitted(false), 3000)
-    }, 1000)
+    } catch (err: any) {
+      setError(err.message || 'Xəta baş verdi')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const images = (premise as any).images || []
@@ -182,33 +194,69 @@ export default function PremiseDetailPage({ params }: { params: Promise<{ id: st
 
                  <hr className="border-white/10 mb-6" />
 
-                 <form onSubmit={handleContactSubmit} className="space-y-4">
-                   <input 
-                     type="text" 
-                     placeholder={uiText.name}
-                     required
-                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors"
-                   />
-                   <input 
-                     type="tel" 
-                     placeholder={uiText.phoneLabel}
-                     required
-                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors"
-                   />
-                   <button 
-                     type="submit" 
-                     disabled={isSubmitting || submitted}
-                     className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                   >
-                     {isSubmitting ? (
-                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                     ) : submitted ? (
-                       <><Check className="w-5 h-5" /> {uiText.sent}</>
-                     ) : (
-                       <><Send className="w-5 h-5" /> {t.sendMessage}</>
+                 {submitted ? (
+                   <div className="text-center py-6 space-y-3">
+                     <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto border border-emerald-500/30">
+                       <CheckCircle2 className="w-6 h-6" />
+                     </div>
+                     <p className="font-bold text-base text-white">{uiText.sent}</p>
+                     <p className="text-xs text-slate-300">
+                       Müraciətiniz admin panelə daxil oldu. Menecerimiz ən qısa zamanda sizinlə əlaqə saxlayacaq.
+                     </p>
+                     <button
+                       type="button"
+                       onClick={() => setSubmitted(false)}
+                       className="text-xs font-bold text-red-400 hover:text-red-300 underline mt-2"
+                     >
+                       Yenidən göndər
+                     </button>
+                   </div>
+                 ) : (
+                   <form onSubmit={handleContactSubmit} className="space-y-3">
+                     {error && (
+                       <p className="text-xs font-bold text-red-400 bg-red-950/50 p-2.5 rounded-lg border border-red-500/30">
+                         {error}
+                       </p>
                      )}
-                   </button>
-                 </form>
+                     <input 
+                       type="text" 
+                       name="fullName"
+                       placeholder={uiText.name}
+                       required
+                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors text-sm"
+                     />
+                     <input 
+                       type="tel" 
+                       name="phone"
+                       placeholder={uiText.phoneLabel}
+                       required
+                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors text-sm"
+                     />
+                     <input 
+                       type="text" 
+                       name="company"
+                       placeholder={uiText.companyLabel}
+                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors text-sm"
+                     />
+                     <textarea 
+                       name="message"
+                       rows={2}
+                       placeholder={uiText.messageLabel}
+                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:bg-white/10 transition-colors text-sm resize-none"
+                     />
+                     <button 
+                       type="submit" 
+                       disabled={isSubmitting}
+                       className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-sm"
+                     >
+                       {isSubmitting ? (
+                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                       ) : (
+                         <><Send className="w-4 h-4" /> {t.sendMessage}</>
+                       )}
+                     </button>
+                   </form>
+                 )}
               </div>
 
             </div>

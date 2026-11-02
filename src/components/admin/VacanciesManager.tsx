@@ -220,8 +220,8 @@ export function VacanciesManager({
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="bg-white w-full max-w-xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
               <h3 className="text-lg font-black text-slate-900">
                 {editingVacancy ? 'Vakansiyanı Redaktə Et' : 'Yeni Vakansiya Elan Et'}
               </h3>
@@ -230,7 +230,7 @@ export function VacanciesManager({
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
               {error && (
                 <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs font-semibold">
                   {error}
@@ -248,29 +248,41 @@ export function VacanciesManager({
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase">Mağaza / Şirkət Adı *</label>
-                <input
-                  required
-                  name="storeName"
-                  placeholder="Məs: Zara, Apple Store, AF Mall Management"
-                  defaultValue={editingVacancy?.storeName || ''}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase">Mağaza / Şirkət Adı *</label>
+                  <input
+                    required
+                    name="storeName"
+                    placeholder="Məs: Zara, Apple Store, AF Mall"
+                    defaultValue={editingVacancy?.storeName || ''}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase">Şöbə / Departament</label>
+                  <input
+                    name="department"
+                    placeholder="Məs: Satış, Mühafizə, Texniki"
+                    defaultValue={editingVacancy?.department || ''}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 uppercase">İş Qrafiki *</label>
                   <select
                     name="type"
                     defaultValue={editingVacancy?.type || 'Full-time'}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:bg-white"
                   >
-                    <option value="Full-time">Tam Ştat (Full-time)</option>
-                    <option value="Part-time">Yarım Ştat (Part-time)</option>
-                    <option value="Shift">Növbəli (Shift)</option>
-                    <option value="Internship">Təcrübəçi (Internship)</option>
+                    <option value="Full-time">Tam Ştat</option>
+                    <option value="Part-time">Yarım Ştat</option>
+                    <option value="Shift">Növbəli</option>
+                    <option value="Internship">Təcrübəçi</option>
                   </select>
                 </div>
 
@@ -279,11 +291,21 @@ export function VacanciesManager({
                   <select
                     name="status"
                     defaultValue={editingVacancy?.status || 'Active'}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:bg-white"
                   >
-                    <option value="Active">Aktiv (Müraciət açıqdır)</option>
-                    <option value="Closed">Bağlanmış (İşə qəbul bitdi)</option>
+                    <option value="Active">Aktiv</option>
+                    <option value="Closed">Bağlanmış</option>
                   </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase">Təcrübə</label>
+                  <input
+                    name="experienceLevel"
+                    placeholder="Məs: 1 il"
+                    defaultValue={editingVacancy?.experienceLevel || ''}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:bg-white"
+                  />
                 </div>
               </div>
 
@@ -298,17 +320,39 @@ export function VacanciesManager({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase">Tələblər və Ətraflı Məlumat</label>
+                <label className="text-xs font-bold text-slate-700 uppercase">İş Haqqında Məlumat</label>
                 <textarea
                   name="description"
-                  rows={3}
-                  placeholder="İş təcrübəsi, dil bilikləri və digər tələblər..."
+                  rows={2}
+                  placeholder="Vakansiyanın ümumi təsviri..."
                   defaultValue={editingVacancy?.description || ''}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase">Öhdəliklər (Hər sətrə bir bənd)</label>
+                <textarea
+                  name="responsibilities"
+                  rows={3}
+                  placeholder="Müştərilərlə nəzakətli ünsiyyət&#10;Kassa əməliyyatlarını aparmaq&#10;Malların səliqəsinə nəzarət"
+                  defaultValue={editingVacancy?.responsibilities?.join('\n') || ''}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white font-mono text-xs"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase">Tələblər (Hər sətrə bir bənd)</label>
+                <textarea
+                  name="requirements"
+                  rows={3}
+                  placeholder="Azərbaycan dili səlis&#10;Minimum 1 il iş təcrübəsi&#10;Komandada işləmək bacarığı"
+                  defaultValue={editingVacancy?.requirements?.join('\n') || ''}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:bg-white font-mono text-xs"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}

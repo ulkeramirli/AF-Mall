@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, MapPin, X, ShoppingBag, MoreHorizontal, Menu, Home, Map, Briefcase, Building } from 'lucide-react'
+import { Search, X, ShoppingBag, Menu, Home, Map, Briefcase, Building } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 import { useTranslation } from '@/lib/i18n'
 import { motion, AnimatePresence } from 'framer-motion'
+import { AfMallLogo } from '@/components/ui/AfMallLogo'
 
 
 export function Navbar() {
@@ -44,18 +45,12 @@ export function Navbar() {
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="shrink-0 z-50">
-            <Link href="/" className="flex items-center gap-3 group">
-            {/* Elegant Icon */}
-            <div className="relative w-10 h-10 md:w-11 md:h-11 flex items-center justify-center shrink-0">
-              <div className="absolute inset-0 bg-red-600 rotate-45 rounded-lg group-hover:rotate-90 transition-transform duration-500 ease-out shadow-lg shadow-red-600/30"></div>
-              <div className="absolute inset-0 border border-red-400/50 rotate-45 rounded-lg scale-110 group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-              <span className="relative z-10 text-white font-black text-lg md:text-xl tracking-tighter">AF</span>
-            </div>
-            {/* Typography */}
-            <div className="flex flex-col justify-center">
-              <span className={`font-black text-xl md:text-2xl leading-none tracking-tight uppercase ${isMobileMenuOpen ? 'text-slate-900' : textColor}`}>MALL</span>
-            </div>
-          </Link>
+            <Link href="/" className="flex items-center group py-1">
+              <AfMallLogo
+                variant="dark"
+                className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+              />
+            </Link>
           </div>
 
           {/* Desktop Links (Center) */}
@@ -64,7 +59,6 @@ export function Navbar() {
             <Link href="/stores" className="hover:text-red-600 transition-colors">{t.storesAndRestaurants}</Link>
             {/* <Link href="/stores?category=2" className="hover:text-red-600 transition-colors">{t.entertainment}</Link> */}
             <Link href="/map" className="hover:text-red-600 transition-colors">{t.map}</Link>
-            <Link href="/services" className="hover:text-red-600 transition-colors">{t.services || 'Xidmətlər'}</Link>
             <Link href="/leasing" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
               {t.leasing || 'İcarə'}
             </Link>
@@ -77,9 +71,6 @@ export function Navbar() {
           <div className={`hidden lg:flex items-center gap-6 text-sm font-semibold ${textColor}`}>
             <Link href="/search" className="flex items-center gap-2 hover:text-red-600 transition-colors">
               <Search className="w-5 h-5" />
-            </Link>
-            <Link href="/how-to-get" className="flex items-center gap-2 hover:text-red-600 transition-colors">
-              <MapPin className="w-5 h-5" /> {t.howToGet}
             </Link>
             
             {/* Custom Language Dropdown */}
@@ -226,8 +217,6 @@ export function Navbar() {
                 { href: '/', label: t.home, icon: Home },
                 { href: '/stores', label: t.storesAndRestaurants, icon: ShoppingBag },
                 { href: '/map', label: t.map, icon: Map },
-                { href: '/services', label: t.services || 'Xidmətlər', icon: MoreHorizontal },
-                { href: '/how-to-get', label: t.howToGet, icon: MapPin },
                 { href: '/leasing', label: t.leasing || 'İcarə', icon: Building },
                 { href: '/vacancies', label: t.vacancies || 'Vakansiyalar', icon: Briefcase }
               ].map((link, i) => {

@@ -12,7 +12,10 @@ import {
   ExternalLink,
   Percent,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  Users,
+  BellRing
 } from "lucide-react"
 import { getDb } from "@/lib/actions"
 
@@ -27,6 +30,8 @@ export default async function AdminDashboard() {
   const premises = db.premises || []
   const activityLogs = db.activityLogs || []
   const mallInfo = db.mallInfo
+  const leasingInquiries = db.leasingInquiries || []
+  const jobApplications = db.jobApplications || []
 
   const storeCount = stores.length
   const categoryCount = categories.length
@@ -36,6 +41,10 @@ export default async function AdminDashboard() {
   const totalPremises = premises.length
   const rentedPremises = premises.filter(p => p.status === 'Rented').length
   const occupancyRate = totalPremises > 0 ? Math.round((rentedPremises / totalPremises) * 100) : 100
+
+  const newInquiries = leasingInquiries.filter(i => i.status === 'New').length
+  const newApplications = jobApplications.filter(a => a.status === 'New').length
+  const totalNewNotifications = newInquiries + newApplications
 
   const stats = [
     { 
@@ -139,6 +148,52 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
+      {/* New Inquiries & Applications Notification Row */}
+      {(newInquiries > 0 || newApplications > 0) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {newInquiries > 0 && (
+            <Link
+              href="/admin/leasing-inquiries"
+              className="flex items-center gap-4 p-5 bg-amber-50 border border-amber-200 rounded-3xl hover:bg-amber-100 transition-all group shadow-xs"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                <Mail className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-black text-amber-900 text-sm">Yeni İcarə Sorğusu</p>
+                  <span className="text-xs font-black bg-red-500 text-white px-2 py-0.5 rounded-full animate-pulse">
+                    {newInquiries} yeni
+                  </span>
+                </div>
+                <p className="text-xs text-amber-700 mt-0.5">Sahə icarəsi ilə bağlı müraciət daxil olub — klikləyin</p>
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-amber-500 group-hover:text-amber-700 transition-colors shrink-0" />
+            </Link>
+          )}
+          {newApplications > 0 && (
+            <Link
+              href="/admin/job-applications"
+              className="flex items-center gap-4 p-5 bg-purple-50 border border-purple-200 rounded-3xl hover:bg-purple-100 transition-all group shadow-xs"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-purple-600 flex items-center justify-center shrink-0 shadow-lg shadow-purple-600/30 group-hover:scale-110 transition-transform">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-black text-purple-900 text-sm">Yeni İş Müraciəti (CV)</p>
+                  <span className="text-xs font-black bg-red-500 text-white px-2 py-0.5 rounded-full animate-pulse">
+                    {newApplications} yeni
+                  </span>
+                </div>
+                <p className="text-xs text-purple-700 mt-0.5">Vakansiyaya yeni namizəd müraciəti — klikləyin</p>
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-purple-500 group-hover:text-purple-700 transition-colors shrink-0" />
+            </Link>
+          )}
+        </div>
+      )}
+
       {/* Quick Action Hub */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden border border-slate-700">
         <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 opacity-5 pointer-events-none">
@@ -158,7 +213,7 @@ export default async function AdminDashboard() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
             <Link 
               href="/admin/stores" 
               className="bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl p-4 text-center transition-all group hover:scale-[1.03]"
@@ -187,12 +242,36 @@ export default async function AdminDashboard() {
             </Link>
 
             <Link 
+              href="/admin/leasing-inquiries" 
+              className="bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl p-4 text-center transition-all group hover:scale-[1.03] relative"
+            >
+              {newInquiries > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              )}
+              <Mail className="w-6 h-6 mx-auto mb-2 text-amber-300 group-hover:text-amber-200 transition-colors" />
+              <p className="text-xs font-bold text-white">İcarə Sorğuları</p>
+              <p className="text-[10px] text-amber-300 font-semibold mt-0.5">{leasingInquiries.length} sorğu ({newInquiries} yeni)</p>
+            </Link>
+
+            <Link 
               href="/admin/vacancies" 
               className="bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl p-4 text-center transition-all group hover:scale-[1.03]"
             >
               <Briefcase className="w-6 h-6 mx-auto mb-2 text-purple-400 group-hover:text-purple-300 transition-colors" />
               <p className="text-xs font-bold text-white">Vakansiyalar</p>
               <p className="text-[10px] text-slate-400 mt-0.5">{activeVacancies} aktiv</p>
+            </Link>
+
+            <Link 
+              href="/admin/job-applications" 
+              className="bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl p-4 text-center transition-all group hover:scale-[1.03] relative"
+            >
+              {newApplications > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              )}
+              <Users className="w-6 h-6 mx-auto mb-2 text-purple-300 group-hover:text-purple-200 transition-colors" />
+              <p className="text-xs font-bold text-white">İş Müraciətləri</p>
+              <p className="text-[10px] text-purple-300 font-semibold mt-0.5">{jobApplications.length} namizəd ({newApplications} yeni)</p>
             </Link>
 
             <Link 

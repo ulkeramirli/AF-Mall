@@ -12,6 +12,8 @@ export async function GET() {
       events: db.events,
       vacancies: db.vacancies,
       premises: db.premises,
+      leasingInquiries: db.leasingInquiries || [],
+      jobApplications: db.jobApplications || [],
       mallInfo: db.mallInfo
     }, {
       headers: {
